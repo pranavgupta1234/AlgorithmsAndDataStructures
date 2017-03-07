@@ -24,7 +24,7 @@ int main(){
 /* r -> lower index , l -> higher index and x -> element to be searched
 */
 int binary_search(vector<int>& arr,int r,int l,int x){
-
+	
 	if(l>=r){
 
 		int mid = r + (l-r)/2;

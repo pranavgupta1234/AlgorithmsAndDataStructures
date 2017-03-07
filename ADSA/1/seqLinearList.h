@@ -2,7 +2,6 @@
 #define SEQLINEARLIST_H
 #include <iostream>
 #include <string.h>
-using namespace std;
 
 /* Templates are the foundation of generic programming, which involves writing code in a
  way that is independent of any particular type.
@@ -20,12 +19,14 @@ using namespace std;
  /** bool find(const int k, Item& x) note that is this we call it with find(2,a) where a=1,2,.. i.e we dont need to pass it by reference
  by us because the function automatically gathers its reference 
  */
+namespace cs202 {
 
 template<class Item> class LinearList{
 	private:
 		int MaxSize;
 		Item *element;    // 1D dynamic array
         int len;
+	
 	public:
 		/* Default constructor. 
 		 * Should create an empty list that not contain any elements*/
@@ -34,7 +35,8 @@ template<class Item> class LinearList{
 		/* This constructor should create a list containing MaxSize elements. You can intialize the elements with any values.*/
 		LinearList(const int& MaxListSize);
 
-		LinearList(const int& MaxListSize,const int& length);
+		// Constuctor with size and default value as input
+        LinearList(const int& isize, const Item& val);    
 
 		/* Destructor. 
 		 * Must free all the memory contained by the list */
@@ -60,6 +62,11 @@ template<class Item> class LinearList{
      		 * */
 		int  maxSize();
 
+ 		// Appending an element to the LinearList
+        // The asymptotic time complexity of this function
+        // should be O(1)
+        void push_back(const Item& x);
+		
 		/* Returns the k-th element of the list. 
 		 * */
 		Item  returnListElement(const int k);
@@ -67,12 +74,30 @@ template<class Item> class LinearList{
 		/* Set x to the k-th element and 
 		 * return true if k-th element is present otherwise return false.
 		 * */
-		bool find(const int k, Item& x);
+
+		// Find the index of first occurence of an item in the list
+        // Return size of list if item not found
+        // 0-based indexing
+        int find(const Item& x);
+
+		// Fills all the elements with a default value
+        void fill(const Item& item);
+
+		bool insert_at_k(const int k, Item& x);
+
+		// Returns the capacity of the LinearList
+        unsigned int capacity();   
 
 		/* Search for x and 
 		 * return the position if found, else return 0.
 		 * */
 		int  search(Item& x);
+
+		// Remove all occurences of an item in the list
+        void erase(const Item& x);
+
+        // Remove the item in the list at position pos
+        void erase_pos(const int& pos);
 
 		/* Set x to the k-th element and delete that k-th element.
 		 * */
@@ -81,12 +106,52 @@ template<class Item> class LinearList{
 		/* Insert x after k-th element.
 		 * */
 		void  insert(const int  k, Item& x);
+
+
+		//we can also define this itertor class by defining just simply class iterator{};
+		//and then externally use LinearList::iterator:: here define the function definitions
+		/*class iterator{                             
+          private:
+            T* elem_;
+          public:
+            iterator()        : elem_(nullptr);   //contructor definitions 
+            iterator(T* ptr)  : elem_(ptr);
+            ~iterator();
+            T& operator*();					return {    };
+            void operator=(T *ptr)  		return { elem_ = ptr  };
+            void operator=(iterator iter)  	return {   };
+            void operator++()				return { elem_++  };
+            void operator--()				return { elem_--  };
+            bool operator!=(T* ptr)			return {   };
+            bool operator==(T* ptr)			return {   };
+            bool operator!=(iterator iter)	return {   };
+            bool operator==(iterator iter)	return {   };
+            iterator operator+(int i)		return {   };
+            iterator operator-(int i)		return {   };
+        };
+
+        iterator begin();
+        iterator end();*/
+
+
 };
 
 template<class Item>
-LinearList<Item> :: LinearList(): MaxSize(10), element(new Item[0]), len(0){
+LinearList<Item> :: LinearList(): element(new Item[0]), len(0){
 
 }
+
+// Constuctor with size and default value as input
+template <class Item>
+LinearList<Item> :: LinearList(const int& isize, const Item& val){
+	element = new Item[isize];
+	len = isize;
+	for(int i=0;i<len;i++){
+		element[i]=val;
+	}
+	MaxSize = isize;
+}    
+
 
 template<class Item>
 LinearList<Item> :: LinearList(const int& MaxListSize){
@@ -95,15 +160,6 @@ LinearList<Item> :: LinearList(const int& MaxListSize){
 		element[i]=0;
 	}
 	len = MaxListSize;
-}
-
-template<class Item>
-LinearList<Item> :: LinearList(const int& MaxListSize,const int& length){
-    element = new Item[MaxListSize];
-	for(int i=0;i<MaxListSize;i++){
-		element[i]=0;
-	}
-	len = length;
 }
 
 template <class Item>
@@ -137,15 +193,48 @@ Item& LinearList<Item> :: operator[](const int& i){
 }
 
 template <class Item>
-bool LinearList<Item> :: find(const int k, Item& x){
+bool LinearList<Item> :: insert_at_k(const int k, Item& x){
 	if(k>=1 && k<=len){
 	   element[k-1]=x;	
 	   return true;
-	}else{
-	   cout<<"This position does not exist"<<endl;
-       return false;
 	}
 }
+template <class Item>
+unsigned int LinearList<Item> :: capacity(){
+	return MaxSize;
+}   
+
+template <class Item>
+void LinearList<Item> :: push_back(const Item& x){
+	Item* new_list = new Item[len+1];
+	for(int i=0;i<len;i++){
+		new_list[i] = element[i];
+	}
+	new_list[len]=x;
+	free(element);
+	element = new_list;
+	len++;
+}
+
+template <class Item>
+void LinearList<Item> :: fill(const Item& x){
+	for(int i=0;i<len;i++){
+		element[i]=x;
+	}
+}
+
+template <class Item>
+int LinearList<Item> :: find(const Item& x){
+	for(int i=0;i<len;i++){
+		if(element[i]==x){
+			return i;
+		}
+	}
+	return len;
+}
+
+
+
 template <class Item>
 int LinearList<Item> :: search(Item& x){
     for(int i=0;i<len;i++){
@@ -157,12 +246,49 @@ int LinearList<Item> :: search(Item& x){
 }
 
 template <class Item>
+void LinearList<Item> :: erase(const Item& x){
+	int count = 0;
+	int j=0;
+	for(int i=0;i<len;i++){
+		if(element[i]==x){
+			count++;
+			element[i]=0;
+		}
+	}
+
+	Item *new_list = new Item[len-count];
+	for(int i=0;i<len;i++){
+		if(element[i]!=0){
+			new_list[j]=element[i];
+			j++;
+		}
+	}
+	free(element);
+	element = new_list;
+	len = len-count;
+}
+
+
+template <class Item>
+void LinearList<Item> :: erase_pos(const int& pos){
+	element[pos-1] = 0;
+	int j=0;
+	Item *new_list = new Item[len-1];
+	for(int i=0;i<len;i++){
+		if(element[i]!=0){
+			new_list[j]=element[i];
+			j++;
+		}
+	}
+	element = new_list;	
+	len = len -1;
+}
+
+
+template <class Item>
 void LinearList<Item> :: deleteElement(const int  k, Item& x){
 	if(k<=len && k>=1){
         element[k-1]=x;
-	}
-	else{
-		cout<<"Sorry element can't be accessed";
 	}
 	len--;
 }
@@ -179,6 +305,9 @@ void LinearList<Item> :: insert(const int  k, Item& x){
 		element[j]=temp[j-(k+1)];
 	}
 	len++;
+}
+
+//end of namespace
 }
 
 #endif

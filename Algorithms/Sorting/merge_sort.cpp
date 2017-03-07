@@ -38,7 +38,7 @@ void merger(vector<int>&a,int l,int m,int r){
 	for(int i=0;i<second_half_length;i++){
 		second_half[i]=a[m+1+i];
 	}
- 	int i=0,j=0,k=l;   				// i for first array and j for second array and k for final array
+ 	int i=0,j=0,k=l;   				// i for first array and j for second array and k for final array remember that initial value for k will be l
 
 	while(i<first_half_length&&j<second_half_length){
 		if(first_half[i]<=second_half[j]){
