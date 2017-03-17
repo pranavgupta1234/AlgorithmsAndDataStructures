@@ -164,7 +164,7 @@ LinearList<Item> :: LinearList(const int& MaxListSize){
 
 template <class Item>
 LinearList<Item> :: ~LinearList(){
-    free(element);
+    delete[] element;
 }
 
 template<class Item>
