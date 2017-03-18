@@ -22,6 +22,7 @@
 namespace cs202 {
 
 template<class Item> class LinearList{
+
 	private:
 		int MaxSize;
 		Item *element;    // 1D dynamic array
@@ -136,6 +137,7 @@ template<class Item> class LinearList{
 
 };
 
+//contructor can be written in this way also
 template<class Item>
 LinearList<Item> :: LinearList(): element(new Item[0]), len(0){
 

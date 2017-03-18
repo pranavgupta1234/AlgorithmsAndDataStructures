@@ -22,8 +22,8 @@ int main(){
 }
 
 //remember that doing modifications to local variables will not make any changes in the list for eg. a statement like 
-// if temp is a local variable then a statement like temp = temp ->next ; even if temp  point to some location in list is not going to make 
-//any changes in list
+// if temp is a local variable then a statement like temp = temp ->next ; this statement will make change in the list only if temp 
+//holds references to the values stored in our list 
 void delete_key_ref(node** head,int data){
     if(*head==NULL){
     	cout<<"The List is empty, please insert something before deleting , you desperate !!! ;)";

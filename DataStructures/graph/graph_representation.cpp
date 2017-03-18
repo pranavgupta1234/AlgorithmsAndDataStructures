@@ -13,20 +13,19 @@ typedef struct GraphNode{
 	GraphNode* link;
 }GraphNode;
 
-typedef struct ArrayList{
+typedef struct ArrayListHead{
 	GraphNode* head;
 }ArrayList;
+
 
 typedef struct Graph{
 	int V;
 	ArrayList* listNodes;
-
 }Graph;
 
 void adjacency_matrix();
 void adjacency_list();
 void display_matrix(int**);
-
 
 int main(int argc,char* argv[]){
 	int selection;
@@ -88,7 +87,9 @@ Graph* createGraph(int V){
 	//way to access fields of struct through pointer to it
 	graph->V = V;
 
-	graph->listNodes = (ArrayList*)malloc(V*sizeof(ArrayList));
+	//allocating space for V heads and storing pointer to them in graph.Note that we can have a pointer to a single struct as well as
+	//we can also use that pointer to iterate through a list of structs allocated 
+	graph->listNodes = (ArrayListHead*)malloc(V*sizeof(ArrayListHead));
 
 	//initialising all links to lists as null
 	for(int i=0;i<V;i++){

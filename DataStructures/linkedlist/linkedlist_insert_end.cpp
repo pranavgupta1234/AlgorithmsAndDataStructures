@@ -20,6 +20,9 @@ int main(){
 	return 0;
 }
 
+//uses head passed by ref
+//Always remember once you pass head into your these function they are able to change values and links in linked list
+//the local variable is mostly head so any modifications to head must be either returned or should be modified as when passed by reference
 void insert_end_ref(node** head,int data){
 	if(*head==NULL){
         node* temp = new node();
