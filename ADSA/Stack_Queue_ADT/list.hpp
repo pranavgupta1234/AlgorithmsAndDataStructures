@@ -3,17 +3,27 @@
 
 namespace ll{
 
+//declare it before node because we want to make it friend of node
+template<class T> class list;
+//make it friend so that list can access the private fields of node
+template<class T>
+class node{
+    friend list<T>;
+    private: 
+    T data;
+    node<T>* link;
+};
+
 template<class T>
 class list{
-
-typedef struct node{
+/*typedef struct node{
     T data;
     node* link;
-}node;
+}node;*/
 
 private:
 
-    node* head;
+    node<T>* head;
     int size;
 
 public:
@@ -27,7 +37,7 @@ public:
     * Seondary constructor.
     * Creates a new list which is a copy of the provided list.
     */
-    list(const list<T> & x);
+    list(list<T> & x);
     /*
     * Destructor.
     * Frees all the memory acquired by the list.
@@ -77,6 +87,43 @@ list<T> :: list(){
 }
 
 template<class T>
+list<T> :: list(list<T> & x){
+    
+    int s = x.length();
+
+    head = NULL;
+    size = s;
+
+    
+
+    for(int i=0;i<s;i++){
+
+        T value = x.top_element();
+        x.remove_first();
+        node<T>* newnode = new node<T>();
+
+        if(head==NULL){
+            newnode -> data = value;
+            newnode -> link = NULL;
+            head = newnode;        
+        }
+        else{
+
+            node<T>* temp_head = head;
+            while(temp_head->link!=NULL){
+                temp_head = temp_head ->link;
+            }
+
+            newnode -> data = value;
+            newnode -> link = NULL;
+            temp_head -> link = newnode;
+        }
+    }
+
+
+}
+
+template<class T>
 list<T> :: ~list(){
     delete head;
 }
@@ -84,18 +131,18 @@ list<T> :: ~list(){
 template<class T>
 void list<T> :: append(const T& value){
 
-    node* newnode = new node();
+    node<T>* newnode = new node<T>();                             //instantiates the node object                // only needed with struct  new node();
 
     if(head==NULL){
-        newnode -> data = value;
-        newnode -> link = NULL;
+        newnode->data = value;
+        newnode->link = NULL;
         head = newnode;        
         //increment size
         size = size + 1;
     }
     else{
 
-        node* temp_head = head;
+        node<T>* temp_head = head;
         while(temp_head->link!=NULL){
             temp_head = temp_head ->link;
         }
@@ -132,8 +179,9 @@ bool list<T> :: empty(){
 template<class T>
 void list<T> :: insert(const T& value){
 
-    node* newnode = new node();
+    node<T>* newnode = new node<T>();
     //we use const because to make sure that the value which user wants to insert is not modified here
+
     newnode->data = value;
     newnode->link = head;
     head = newnode;
@@ -147,8 +195,14 @@ void list<T> :: remove(const T & x){
 
     if(head!=NULL){
 
-        node* temp_head = head;
-        node* prev;
+        node<T>* temp_head = head;
+        node<T>* prev;
+
+        if(head->data==x){
+            head = head ->link;
+            size = size-1;
+            return ;
+        }
 
         while(temp_head->data!=x){
             prev = temp_head;
@@ -156,14 +210,13 @@ void list<T> :: remove(const T & x){
         }
         prev->link = temp_head->link;
     }
-
     size = size-1;
 }
 
 template<class T>
 void list<T> :: printList(){
 
-    node* temp = head;
+    node<T>* temp = head;
 
     while(temp!=NULL){
         std::cout<<temp->data<<" ";
@@ -175,6 +228,33 @@ void list<T> :: printList(){
 template<class T>
 void list<T> :: append(list<T>& x){
 
+    int s = x.length();
+
+    size = size + s;
+
+    for(int i=0;i<s;i++){
+
+        T value = x.top_element();
+        x.remove_first();
+        node<T>* newnode = new node<T>();
+
+        if(head==NULL){
+            newnode -> data = value;
+            newnode -> link = NULL;
+            head = newnode;        
+        }
+        else{
+
+            node<T>* temp_head = head;
+            while(temp_head->link!=NULL){
+                temp_head = temp_head ->link;
+            }
+
+            newnode -> data = value;
+            newnode -> link = NULL;
+            temp_head -> link = newnode;
+        }
+    }
 }
 
 template<class T>
@@ -186,7 +266,7 @@ T list<T> :: top_element(){
 
 template<class T>
 void list<T> :: remove_first(){
-    node* to_remove = head;
+    node<T>* to_remove = head;
     head = head->link;
     delete to_remove;
     size = size -1;

@@ -31,7 +31,7 @@ void merger(vector<int>&a,int l,int m,int r){
 	int first_half[first_half_length];
 	int second_half[second_half_length];
 
-	//filling up the temporary arraay with values
+	//filling up the temporary array with values
 	for(int i=0;i<first_half_length;i++){
 		first_half[i]=a[l+i];    // note that the mth element is include in first array i.e arr[m]
 	}

@@ -20,7 +20,7 @@ int main(){
 	    queue_adt.push(data);											//getline(in,data);  to get whole line
     }
 
-    offset = queue_adt.front();
+    offset = queue_adt.pop();
 
     for(int i=0;i<offset;i++){
     	int popped;
