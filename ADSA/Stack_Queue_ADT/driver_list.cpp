@@ -79,8 +79,5 @@ int main(int argc,char *argv[]){
 			done = false;
 		}	
 	}
-
-	
-
 	return 0;
 }

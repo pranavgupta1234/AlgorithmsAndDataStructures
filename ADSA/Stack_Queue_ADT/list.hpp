@@ -5,14 +5,16 @@ namespace ll{
 
 //declare it before node because we want to make it friend of node
 template<class T> class list;
+
 //make it friend so that list can access the private fields of node
-template<class T>
-class node{
-    friend list<T>;
-    private: 
-    T data;
-    node<T>* link;
-};
+    //by declaring an object of node class memory will not be allocated , we have to explicitly call node* newnode = new node<t>();
+    template<class T>
+    class node{
+        friend list<T>;
+        private: 
+        T data;
+        node<T>* link;
+    };
 
 template<class T>
 class list{
