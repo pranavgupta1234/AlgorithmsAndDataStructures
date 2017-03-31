@@ -17,8 +17,8 @@ private:
     Key* key;
     Value* value;
     int size;
-    Value initial_value,marker;
-    Key initial_key;
+    Value initial_value,marker_value;
+    Key initial_key,marker_key;
     std::stringstream ss;
     std::string key_in_string;
     /*
@@ -101,7 +101,13 @@ public:
 
     int sizeTable();
 
-    void setDefaultValues(const Key& k,const Value& val,const Value& mark);
+    void setDefaultValues(const Key& k,const Value& val,const Key& mark_k,const Value& mark_v);
+
+    int getSize();
+
+    Key* getKey();
+
+    Value* getValue();
 };
 
 
@@ -138,8 +144,8 @@ void DoubleHashMap<Key,Value> :: remove(const Key& k){
     while(key[hashed_value] != initial_key and probe_number < size){
 
         if(key[hashed_value] == k){
-            key[hashed_value] = marker;
-            value[hashed_value] = marker;
+            key[hashed_value] = marker_key;
+            value[hashed_value] = marker_value;
         }
         else{
             hashed_value = (hashed_value+offset)%size;
@@ -186,7 +192,7 @@ void DoubleHashMap<Key,Value> :: put(const Key& k, const Value& v){
 
     if(!has(k)){
 
-        while(key[hashed_value] != initial_value and key[hashed_value] != marker and probe_number< size ) {
+        while(key[hashed_value] != initial_value and key[hashed_value] != marker_key and probe_number< size ) {
             hashed_value = (hashed_value+offset)%size;
             probe_number++;
         }
@@ -269,7 +275,7 @@ DoubleHashMap<Key,Value> :: DoubleHashMap(){
 
     // for(int i=0;i<size;i++){
     //     key[i]=0;
-    //     value[i]=0;
+    //     value[i]=0;                      //do not initialise to some hardcoded value
     // }
 }
 
@@ -287,14 +293,35 @@ DoubleHashMap<Key,Value> :: DoubleHashMap(const int& num){
 }
 
 template<class Key,class Value>
-DoubleHashMap<Key,Value> :: DoubleHashMap(DoubleHashMap<Key, Value>& ht){
+DoubleHashMap<Key,Value> :: DoubleHashMap(DoubleHashMap<Key,Value>& dhm){
 
-    int newSize = ht.sizeTable();
-    size = newSize;
+    key = new Key[dhm.getSize()];
+    value = new Value[dhm.getSize()];
 
-    key = new Key[newSize];
-    value = new Value[newSize];
+    size = dhm.getSize();
 
+    Key* k = dhm.getKey();
+    Value* v = dhm.getValue();
+
+    for(int i=0;i<dhm.getSize();i++){
+        key[i]=k[i];
+        value[i]=v[i];
+    }
+}
+
+template<class Key,class Value>
+int DoubleHashMap<Key,Value> :: getSize(){
+    return size;
+}
+
+template<class Key,class Value>
+Key* DoubleHashMap<Key,Value> :: getKey(){
+    return key;
+}
+
+template<class Key,class Value>
+Value* DoubleHashMap<Key,Value> :: getValue(){
+    return value;
 }
 
 template<class Key,class Value>
@@ -428,9 +455,10 @@ bool DoubleHashMap<Key,Value> :: isPrime(int n){
 }
 
 template<class Key,class Value>
-void DoubleHashMap<Key,Value> :: setDefaultValues(const Key& k,const Value& val,const Value& mark){
+void DoubleHashMap<Key,Value> :: setDefaultValues(const Key& k,const Value& val,const Key& mark_k,const Value& mark_v){
 
-    marker = mark;
+    marker_key = mark_k;
+    marker_value = mark_v;
 
     for(int i=0 ; i < size ; i++){
         key[i] = k;
@@ -438,7 +466,6 @@ void DoubleHashMap<Key,Value> :: setDefaultValues(const Key& k,const Value& val,
     }
 
 }
-
 
 //end of namespace DH
 }

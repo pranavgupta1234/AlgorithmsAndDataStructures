@@ -120,6 +120,12 @@ public:
 
     void printTable();
 
+    int getSize();
+
+    int* getLength();
+
+    HashTableNode<Key,Value>** getNodesList();
+
 };
 
 template<class Key, class Value>
@@ -240,7 +246,7 @@ void ChainedMap<Key,Value> :: rehash(){
     //free the temporary memory
     //delete temp_len;
 
-    std::cout<<"rehashed"<<std::endl;
+    //std::cout<<"rehashed"<<std::endl;
 
 
     HashTableNode<Key,Value>** temp_node = new HashTableNode<Key,Value>*[2*size];
@@ -312,6 +318,83 @@ ChainedMap<Key,Value> :: ChainedMap(){
         length[i]=0;
     }
 
+}
+
+template<class Key,class Value>
+ChainedMap<Key,Value> :: ChainedMap(const int& num){
+    node = new HashTableNode<Key,Value>*[num];
+    for(int i=0;i<num;i++){
+        node[i]=NULL;
+    }
+
+    size = num;
+
+    //take initial 0 length for all lists
+    length = new int[num];
+
+    //initialise all of them with zero
+    for(int i=0;i<INITIAL_SIZE;i++){
+        length[i]=0;
+    }
+
+}
+
+template<class Key,class Value>
+ChainedMap<Key,Value> :: ChainedMap(ChainedMap<Key,Value>& cm){
+    node = new HashTableNode<Key,Value>*[cm.getSize()];
+    
+    for(int i=0;i<cm.getSize();i++){
+        node[i]=NULL;
+    }
+
+    size = cm.getSize();
+
+    //take initial 0 length for all lists
+    length = new int[cm.getSize()];
+
+    //get all lengths
+    int* l = cm.getLength();
+    //get nodes pointer list
+    HashTableNode<Key,Value>** n;
+    n = cm.getNodesList();
+
+    //copy all lengths
+    for(int i=0;i<cm.getSize();i++){
+        length[i]=l[i];
+    }
+
+    for(int i=0;i<cm.getSize();i++){
+        node[i] = n[i];
+        HashTableNode<Key,Value>* temp_node = n[i];
+
+        while(temp_node != NULL){
+            if(!has(temp_node->key)){
+                HashTableNode<Key,Value>* copyNode = new HashTableNode<Key,Value>();
+                copyNode -> key = temp_node -> key;
+                copyNode -> value = temp_node -> value;
+                copyNode -> link = node[i];
+                node[i] = copyNode;
+                temp_node = temp_node -> link;
+            }else{
+                temp_node = temp_node -> link;
+            }
+        }
+    }
+}
+
+template<class Key,class Value>
+int ChainedMap<Key,Value> :: getSize(){
+    return size;
+}
+
+template<class Key,class Value>
+int* ChainedMap<Key,Value> :: getLength(){
+    return length;
+}
+
+template<class Key,class Value>
+HashTableNode<Key,Value>** ChainedMap<Key,Value> :: getNodesList(){
+    return node;
 }
 
 template<class Key,class Value>

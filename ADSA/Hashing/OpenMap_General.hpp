@@ -20,8 +20,8 @@ private:
     Key* key;
     Value* value;
     int size;
-    Value initial_value,marker;
-    Key initial_key;
+    Value initial_value,marker_key;
+    Key initial_key,marker_value;
     std::stringstream ss;
     std::string key_in_string;
     /*
@@ -98,7 +98,13 @@ public:
 
     void printTable();
 
-    void setDefaultValues(const Key& k,const Value& value,const Value& marker);
+    void setDefaultValues(const Key& k,const Value& value,const Key& marker_key,const Value& marker_value);
+
+    int getSize();
+
+    Key* getKey();
+
+    Value* getValue();
 
 };
 
@@ -133,8 +139,8 @@ void OpenMap<Key,Value> :: remove(const Key& k){
     while(key[hashed_value] != initial_key and probe_number < size){
 
         if(key[hashed_value] == k){
-            key[hashed_value] = (Key)marker;
-            value[hashed_value] = marker;
+            key[hashed_value] = marker_key;
+            value[hashed_value] = marker_value;
         }
         else{
             hashed_value = (hashed_value+1)%size;
@@ -179,7 +185,7 @@ void OpenMap<Key,Value> :: put(const Key& k, const Value& v){
 
     if(!has(k)){
 
-        while(key[hashed_value] != initial_key and key[hashed_value] != marker and probe_number< size ) {
+        while(key[hashed_value] != initial_key and key[hashed_value] != marker_key and probe_number< size ) {
             hashed_value = (hashed_value+1)%size;
             probe_number++;
         }
@@ -267,6 +273,50 @@ OpenMap<Key,Value> :: OpenMap(){
     }*/
 }
 
+template<class Key, class Value>
+OpenMap<Key,Value> :: OpenMap(const int& num){
+
+    key = new Key[num];
+    value = new Value[num];
+    size = num;
+
+/*    for(int i=0;i<size;i++){
+        key[i]=0;
+        value[i]=0;
+    }*/
+}
+
+template<class Key, class Value>
+OpenMap<Key,Value> :: OpenMap(OpenMap<Key,Value>& ht){
+
+    key = new Key[ht.getSize()];
+    value = new Value[ht.getSize()];
+    size = ht.getSize();
+
+    Key* k = ht.getKey();
+    Value* v = ht.getValue();
+
+    for(int i=0;i<ht.getSize();i++){
+        key[i]=k[i];
+        value[i]=v[i];
+    }
+}
+
+template<class Key,class Value>
+Key* OpenMap<Key,Value> :: getKey(){
+    return key;
+} 
+
+template<class Key,class Value>
+Value* OpenMap<Key,Value> :: getValue(){
+    return value;
+} 
+
+template<class Key,class Value>
+int OpenMap<Key,Value> :: getSize(){
+    return size;
+}
+
 template<class Key,class Value>
 OpenMap<Key,Value> :: ~OpenMap(){
 
@@ -340,9 +390,10 @@ Value& OpenMap<Key,Value> :: operator[](const Key& k){
 }
 
 template<class Key,class Value>
-void OpenMap<Key,Value> :: setDefaultValues(const Key& k,const Value& val,const Value& mark){
+void OpenMap<Key,Value> :: setDefaultValues(const Key& k,const Value& val,const Key& mark_key,const Value& mark_value){
 
-    marker = mark;
+    marker_value = mark_value;
+    marker_key = mark_key;
 
     for(int i=0 ; i < size ; i++){
         key[i] = k;

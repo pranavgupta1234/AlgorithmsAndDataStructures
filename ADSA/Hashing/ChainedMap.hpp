@@ -98,6 +98,7 @@ public:
     void put(const Key& key, const Value& value);
 
     void printTable();
+
 };
 
 template<class Key, class Value>
@@ -183,6 +184,14 @@ template<class Key,class Value>
 ChainedMap<Key,Value> :: ChainedMap(){
     node = new HashTableNode<Key,Value>*[INITIAL_SIZE];
     for(int i=0;i<INITIAL_SIZE;i++){
+        node[i]=NULL;
+    }
+}
+
+template<class Key,class Value>
+ChainedMap<Key,Value> :: ChainedMap(const int& num){
+    node = new HashTableNode<Key,Value>*[num];
+    for(int i=0;i<num;i++){
         node[i]=NULL;
     }
 }
