@@ -1,9 +1,3 @@
-/*
- * DoubleHashMap.hpp
- *
- * This is an interface for a hash table using Double Hashing.
- */
-
 #ifndef DOUBLEHASHMAP_HPP_
 #define DOUBLEHASHMAP_HPP_
 
