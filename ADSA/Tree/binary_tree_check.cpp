@@ -1,9 +1,10 @@
 #include <iostream>
 #include "binary_tree.hpp"
+#include "bst.hpp"
 using namespace std;
 
 int main(){
 
-	BT::BinaryTree<int,int> btree;
+	BST::BSTree<int,int> btree;
 	
 }

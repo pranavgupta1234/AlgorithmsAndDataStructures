@@ -26,6 +26,7 @@ class BinaryTree
    */
   //accessible to classes which inherit from BinaryTree
 protected:
+  
   BinaryNode<Key,Value>* root;
 
   //helper function for in order traversal
