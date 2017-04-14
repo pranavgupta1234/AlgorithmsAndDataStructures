@@ -1,34 +1,38 @@
 #ifndef BINARYTREE_HPP
 #define BINARYTREE_HPP 1
 
+namespace Trees{
 
-namespace BT{
+template<class Key,class Value>class BinaryTree;
 
 template<class Key,class Value>
-class BinaryNode
-{
+class BinaryNode{
+friend BinaryTree<Key,Value>;
 public:
   Key key;
   Value val;
-  BinaryNode<Key,Value> * root,* left,* right,* parent;
-    /*Default constructor. Should assign the default value to key and value
-     */
+  BinaryNode<Key,Value>* root,*left,*right,*parent;
+  /*Default constructor. Should assign the default value to key and value
+  */
   BinaryNode();
   /*This contructor should assign the key and val from the passed parameters
-     */
+  */
   BinaryNode(Key key, Value value);
 };
+
 
 template<class Key,class Value>
 class BinaryTree
 {
+
+public:
   /* You can implement your own helper functions whenever required.
-   */
+  */
   //accessible to classes which inherit from BinaryTree
 protected:
-  
-  BinaryNode<Key,Value>* root;
 
+  BinaryNode<Key,Value>* root;
+  
   //helper function for in order traversal
   void in_order(BinaryNode<Key,Value>* root);
 
@@ -38,7 +42,7 @@ protected:
   //helper function for post order traversal
   void post_order(BinaryNode<Key,Value>* root);
 
-  BinaryNode<Key,Value>* newNode(Key key,Value val);
+  BinaryNode<Key,Value>* newNode(Key& key,Value& val);
 
 
 public:
@@ -122,7 +126,7 @@ BinaryTree<Key,Value> :: BinaryTree(){
 }
 
 template<class Key,class Value>
-BinaryNode<Key,Value>* BinaryTree<Key,Value> :: newNode(Key k,Value v){
+BinaryNode<Key,Value>* BinaryTree<Key,Value> :: newNode(Key& k,Value& v){
 
   BinaryNode<Key,Value>* newTempNode = new BinaryNode<Key,Value>();
   newTempNode -> key = k;
@@ -130,6 +134,7 @@ BinaryNode<Key,Value>* BinaryTree<Key,Value> :: newNode(Key k,Value v){
   newTempNode -> left = NULL;
   newTempNode -> right = NULL;
 
+  return newTempNode;
 }
 
 
@@ -175,7 +180,7 @@ void BinaryTree<Key,Value> :: print_pre_order(){
   pre_order(root);
 }
 
-//end of namespace BT  
+//end of namespace  
 }
 
 #endif /* ifndef BINARYTREE_HPP */

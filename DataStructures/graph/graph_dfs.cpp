@@ -73,7 +73,8 @@ int main(){
 	
 	int V=4;
 	int v = 1;
-	Graph graph(V);
+	//Graph* graph = new Graph(4);		//object created on heap so we need to use like graph -> addEdge() etc
+	Graph graph(4); 					//object created on stack
 	graph.addEdge(0, 1);
     graph.addEdge(0, 2);
     graph.addEdge(1, 2);
