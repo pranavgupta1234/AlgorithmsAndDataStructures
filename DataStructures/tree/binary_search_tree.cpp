@@ -16,17 +16,22 @@ node* deleteNode(node* root,int val);
 int main(){
 	
 	node* root = NULL;
-	root = insert(root,89);
-	root = insert(root,45);
-	root = insert(root,3);
-	root = insert(root,4);
 	root = insert(root,6);
+	root = insert(root,3);
+	root = insert(root,1);
+	root = insert(root,5);
+	root = insert(root,9);
+	root = insert(root,7);
+	root = insert(root,8);
+	root = insert(root,10);
 
 	inorder(root);
 
 	root = deleteNode(root,89);
 
 	inorder(root);
+
+
 	return 0;
 }
 

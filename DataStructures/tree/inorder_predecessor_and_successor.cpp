@@ -19,19 +19,20 @@ int main(){
 	node* pre = NULL;
 	node* suc = NULL;
 
-	root = insert(root,50);
-	root = insert(root,30);
-	root = insert(root,20);
-	root = insert(root,40);
-	root = insert(root,70);
-	root = insert(root,60);
-	root = insert(root,80);
+	root = insert(root,6);
+	root = insert(root,3);
+	root = insert(root,1);
+	root = insert(root,5);
+	root = insert(root,9);
+	root = insert(root,7);
+	root = insert(root,8);
+	root = insert(root,10);
 
 
 	inorder(root);
 	cout<<endl;
 
-	SucPredKey(root,pre,suc,50);
+	SucPredKey(root,pre,suc,9);
 
 
 

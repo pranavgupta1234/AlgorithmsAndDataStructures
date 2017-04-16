@@ -32,6 +32,10 @@ protected:
 
   Key find_predecessor(BinaryNode<Key,Value>* node,Key key);
 
+  int find_height(BinaryNode<Key,Value>* root);
+
+  int find_size(BinaryNode<Key,Value>* root);
+
 public:
   /* Binary Search Tree default constructor
   */
@@ -68,16 +72,16 @@ public:
   /*
    * This method returns the current height of the binary search tree.
    */
-  //virtual int getHeight();
+  virtual int getHeight();
   /*
    * This method returns the total number of elements in the binary search tree.
    */
-  //virtual int size();
+  virtual int size();
   /*
    * This method prints the key value pairs of the binary search tree, sorted by
    * their keys.
    */
-  //virtual void print();
+  virtual void print();
 
 };
 
@@ -228,6 +232,10 @@ Key BSTree<Key,Value> :: find_successor(BinaryNode<Key,Value>* root,Key key){
 
       }
 
+    }else if(root -> key > key){
+      return find_successor(root -> left,key);
+    }else{
+      return find_successor(root -> right,key);
     }
 
   }
@@ -264,6 +272,10 @@ Key BSTree<Key,Value> :: find_predecessor(BinaryNode<Key,Value>* root,Key key){
 
       }
 
+    }else if(root -> key > key){
+      return find_predecessor(root -> left,key);
+    }else{
+      return find_predecessor(root -> right,key);
     }
 
   }
@@ -271,6 +283,49 @@ Key BSTree<Key,Value> :: find_predecessor(BinaryNode<Key,Value>* root,Key key){
 }
 
 
+template<class Key,class Value>
+int BSTree<Key,Value> :: getHeight(){
+  return find_height(root);
+}
+
+template<class Key,class Value>
+int BSTree<Key,Value> :: find_height(BinaryNode<Key,Value>* root){
+  if(root == NULL){
+    return 0;
+  }
+
+  int left_max = find_height(root -> left);
+  int right_max = find_height(root -> right);
+
+  if(left_max > right_max){
+    return left_max+1;
+  }else{
+    return right_max+1;
+  }
+}
+
+template<class Key,class Value>
+void BSTree<Key,Value> :: print(){
+  this -> print_in_order();
+}
+
+template<class Key,class Value>
+int BSTree<Key,Value> :: size(){
+  return find_size(root);
+}
+
+template<class Key,class Value>
+int BSTree<Key,Value> :: find_size(BinaryNode<Key,Value>* root){
+  if(root == NULL){
+    return 0;
+  }
+
+  int left_size = find_size(root -> left);
+  int right_size = find_size(root -> right);
+  
+  return left_size + right_size + 1;
+   
+}
 
 //end of namespace  
 }

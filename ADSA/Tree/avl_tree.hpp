@@ -1,5 +1,5 @@
-#ifndef BINARYTREE_HPP
-#define BINARYTREE_HPP 1
+#ifndef AVLTREE_HPP
+#define AVLTREE_HPP 1
 #include <vector>
 
 namespace Trees{
@@ -12,7 +12,7 @@ friend BinaryTree<Key,Value>;
 public:
   Key key;
   Value val;
-  BinaryNode<Key,Value>* root,*left,*right,*parent;
+  BinaryNode<Key,Value>*left,*right,*parent;
   int height;
   /*Default constructor. Should assign the default value to key and value
   */
@@ -24,7 +24,7 @@ public:
 
 
 template<class Key,class Value>
-class BinaryTree
+class AVLTree
 {
 
 public:
@@ -387,7 +387,7 @@ void BinaryTree<Key,Value> :: print(){
  
   iterator.push_back(root);
  
-  while (!iterator.empty()){
+  while (iterator.empty()){
     BinaryNode<Key,Value>* temp = iterator.front();
     iterator.erase(iterator.begin());
     
@@ -423,6 +423,7 @@ int BinaryTree<Key,Value> :: get_size(BinaryNode<Key,Value>* root){
   return left_size + right_size + 1;
 
 }
+
 
 template<class Key,class Value>
 void BinaryTree<Key,Value> :: in_order(BinaryNode<Key,Value>* root){
