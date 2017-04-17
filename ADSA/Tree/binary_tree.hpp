@@ -56,6 +56,10 @@ protected:
 
   int get_size(BinaryNode<Key,Value>* root);
 
+  BinaryNode<Key,Value>* delete_helper(BinaryNode<Key,Value>* root,Key key);
+
+  BinaryNode<Key,Value>* InorderSuccessor(BinaryNode<Key,Value>* root);
+
 
 public:
   /* Binary tree default constructor
@@ -66,7 +70,7 @@ public:
   Value get(const Key& key);
   /* Implement remove function that can delete a node in binary tree with given key. 
    */
-  //virtual void remove(const Key& key) ;
+  virtual void remove(const Key& key) ;
   /* Implement has function which will return true if the given key is present in binary tree 
    * otherwise return false.  
    */
@@ -238,6 +242,61 @@ bool BinaryTree<Key,Value> :: search(BinaryNode<Key,Value>* root,const Key key){
     return search(root -> left,key) or search(root -> right,key);
   }
 
+}
+
+template<class Key,class Value>
+void BinaryTree<Key,Value> :: remove(const Key& key){
+
+  root = delete_helper(root,key);
+  
+}
+
+template<class Key,class Value>
+BinaryNode<Key,Value>* BinaryTree<Key,Value> :: delete_helper(BinaryNode<Key,Value>* root,Key key){
+
+  if(root == NULL){
+    return root;
+  }
+
+  if(root -> key > key){
+    root -> left = delete_helper(root -> left,key);
+  }else if(root -> key < key){
+    root -> right = delete_helper(root -> right,key);
+  }else{
+
+    if(root -> left == NULL){
+      BinaryNode<Key,Value>* temp_right = root -> right;
+      delete root;
+      return temp_right; 
+    }
+
+    if(root -> right == NULL){
+      BinaryNode<Key,Value>* temp_left = root -> left;
+      delete root;
+      return temp_left;
+    }
+
+    BinaryNode<Key,Value>* inorder_successor = InorderSuccessor(root);
+
+    root -> key = inorder_successor -> key;
+    root -> val = inorder_successor -> val; 
+
+    root -> right = delete_helper(root -> right, inorder_successor -> key);
+  
+  }
+
+}
+
+template<class Key,class Value>
+BinaryNode<Key,Value>* BinaryTree<Key,Value> :: InorderSuccessor(BinaryNode<Key,Value>* root){
+
+  BinaryNode<Key,Value>* current = root;
+
+  while(current -> right != NULL){
+    current = current -> right;
+  }
+
+  return current;
 }
 
 template<class Key,class Value>

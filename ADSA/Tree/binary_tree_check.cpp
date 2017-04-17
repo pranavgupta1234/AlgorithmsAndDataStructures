@@ -1,10 +1,10 @@
 #include <iostream>
-#include "AVL.hpp"
+#include "RBTree.hpp"
 using namespace std;
 
 int main(){
 
-	Trees::AVL<int,int> btree;
+	Trees::RBTree<int,int> btree;
 	btree.put(10,23);
 	btree.put(20,56);
 	btree.put(30,34);
@@ -13,6 +13,10 @@ int main(){
 	btree.put(25,46);
 
 	btree.print_pre_order();
+
+	btree.remove(30);
+	cout<<endl<<endl;
+	btree.print_pre_order();	
 	//cout<<btree.size();
 
 
