@@ -14,6 +14,7 @@ public:
   Value val;
   BinaryNode<Key,Value>* root,*left,*right,*parent;
   int height;
+  int color;
   /*Default constructor. Should assign the default value to key and value
   */
   BinaryNode();

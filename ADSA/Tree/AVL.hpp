@@ -151,7 +151,7 @@ BinaryNode<Key,Value>* AVL<Key,Value> :: insert(BinaryNode<Key,Value>* node, Key
     node->left  = insert(node->left,key,value);
   }
   else if (key > node->key){
-    node->right = insert(node->right, key,value);
+    node->right = insert(node->right,key,value);
   }
   else{
     // Equal keys are not allowed in BST
@@ -208,7 +208,7 @@ template<class Key,class Value>
 BinaryNode<Key,Value>* AVL<Key,Value> :: delete_helper(BinaryNode<Key,Value>* root,Key key){
   
   // STEP 1: PERFORM STANDARD BST DELETE
- 
+
   if(root == NULL){
     return root;    
   }
@@ -242,7 +242,8 @@ BinaryNode<Key,Value>* AVL<Key,Value> :: delete_helper(BinaryNode<Key,Value>* ro
     }else{
     // node with two children: Get the inorder
     // successor (smallest in the right subtree)
-        BinaryNode<Key,Value>* temp = this -> InorderSuccessor(root->right);        //According to the latest standard it is mandatory to use this explicitly even if we are using the function from base class.this ensures we want to use the inherited function from base class into derived class
+        BinaryNode<Key,Value>* temp = this -> InorderSuccessor(root->right,root->key);        //According to the latest standard it is mandatory to use 
+        //this explicitly even if we are using the function from base class.this ensures we want to use the inherited function from base class into derived class
  
         // Copy the inorder successor's data to this node
         root->key = temp->key;

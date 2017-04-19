@@ -38,7 +38,11 @@ protected:
 
   BinaryNode<Key,Value>* delete_helper(BinaryNode<Key,Value>* root,Key key);
 
-  BinaryNode<Key,Value>* InorderSuccessor(BinaryNode<Key,Value>* root);
+  BinaryNode<Key,Value>* InorderSuccessor(BinaryNode<Key,Value>* root,Key key);
+
+  BinaryNode<Key,Value>* getNode(Key key);
+
+  BinaryNode<Key,Value>* helper_getNode(BinaryNode<Key,Value>* root,Key key);
 
 
 public:
@@ -178,7 +182,7 @@ BinaryNode<Key,Value>* BSTree<Key,Value> :: delete_helper(BinaryNode<Key,Value>*
       return temp_left;
     }
 
-    BinaryNode<Key,Value>* inorder_successor = InorderSuccessor(root);
+    BinaryNode<Key,Value>* inorder_successor = InorderSuccessor(root,root->key);
 
     root -> key = inorder_successor -> key;
     root -> val = inorder_successor -> val; 
@@ -330,22 +334,67 @@ Key BSTree<Key,Value> :: find_predecessor(BinaryNode<Key,Value>* root,Key key){
 
 }
 
+
 template<class Key,class Value>
-BinaryNode<Key,Value>* BSTree<Key,Value> :: InorderSuccessor(BinaryNode<Key,Value>* root){
+BinaryNode<Key,Value>* BSTree<Key,Value> :: InorderSuccessor(BinaryNode<Key,Value>* root,Key key){
 
-  BinaryNode<Key,Value>* current = root;
-
-  while(current -> right != NULL){
-    current = current -> right;
+  if(root == NULL){
+    return NULL; 
   }
 
-  return current;
+  if(root -> key == key){
+
+    if(root -> right != NULL){
+
+      BinaryNode<Key,Value>* temp_left = root -> right;
+
+      while(temp_left -> left != NULL){
+        temp_left = temp_left -> left;
+      }
+
+      return temp_left;
+    }
+
+  }else if(root -> key > key){
+    InorderSuccessor(root -> left,key);
+  }else if(root -> key < key){
+    InorderSuccessor(root -> right,key);
+  }
+
 }
 
 
 template<class Key,class Value>
 int BSTree<Key,Value> :: getHeight(){
   return find_height(root);
+}
+
+template<class Key,class Value>
+BinaryNode<Key,Value>* BSTree<Key,Value> :: helper_getNode(BinaryNode<Key,Value>* root,Key key){
+
+  if(root != NULL){
+
+    if(root -> key == key){
+      return root;
+    }
+
+    if(root -> key > key){
+      return helper_getNode( root -> left,key);
+    }
+    else{
+      return helper_getNode(root -> right,key);
+    }
+  }
+
+  return 0;              //TODO  fix this
+
+}
+
+template<class Key,class Value>
+BinaryNode<Key,Value>* BSTree<Key,Value> :: getNode(Key key){
+
+  return helper_getNode(root,key);
+
 }
 
 template<class Key,class Value>

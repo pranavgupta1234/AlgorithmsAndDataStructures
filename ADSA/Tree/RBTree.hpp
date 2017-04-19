@@ -1,37 +1,19 @@
 #ifndef RBTree_HPP_
 #define RBTree_HPP_ 1
 #include "binary_search_tree.hpp"
+#include "limits.h"
+
 
 namespace Trees{
-
-template<class Key,class Value>class RBTree;
-
-enum Color { RED, BLACK };
-
-template<class Key,class Value>
-class RBTNode : public BinaryNode<Key,Value>{
-friend RBTree<Key,Value>;
-public:
-  Key key;
-  Value val;
-  Color color;
-  BinaryNode<Key,Value>* root,*left,*right,*parent;
-  /*Default constructor. Should assign the default value to key and value
-  */
-  BinaryNode();
-  /*This contructor should assign the key and val from the passed parameters
-  */
-  BinaryNode(Key key, Value value);
-};
-
 /* The color enumeration.
  * Please use this and not integers or characters to store the color of the node
  * in your red black tree.
  * Also create a class RBTNode which should inherit from BinaryNode and has the attribute color in it. 
  */
+enum Color { RED, BLACK };
 
-template <class Key, class Value>
-class RBTree : public BSTree<Key, Value> {
+template <class Key,class Value>
+class RBTree : public BSTree<Key,Value>{
 /* Inherit as many functions as possible from BSTree.
  * Only override those which absolutely need it.
  * Also make sure that all inherited functions work correctly in the context of a red black tree.
@@ -45,22 +27,30 @@ class RBTree : public BSTree<Key, Value> {
 	 * Used after an insertion in the rb tree.
 	 * It applies fixing mechanisms to make sure that the tree remains a valid red black tree after an insertion.
 	 */
-	void insertRBFixup(RBTree<Key,Value>* root,);
+	void insertRBFixup(BinaryNode<Key,Value>* z);
 
 /* Function deleteRBFixup
 	 * Used for:
 	 * Used after a deletion in the rb tree.
 	 * It applies fixing mechanisms to make sure that the tree remains a valid red black tree after a deletion.
 	 */
-	void deleteRBFixup(RBTree<Key,Value>* root);
+	void deleteRBFixup(BinaryNode<Key,Value>* rt);
+
+	int blackHeight(BinaryNode<Key,Value>* rt);
+	void left_rotate(BinaryNode<Key,Value>* z);
+	void right_rotate(BinaryNode<Key,Value>* z);
 
 public:
 	/* Function : blackHeight
 	 * 
 	 * Returns:
 	 * the black height of the red black tree which begins at node_ptr root
-	 */
-	int blackHeight(RBTree<Key,Value>* root);	
+	 */	
+
+		void put(const Key& key, const Value& value);
+		int blackHeight();
+		void remove(const Key& key);
+		int color(Key key);
 	/*
 	 * Apart from these functions, also provide functions for rotations in the tree.
 	 * The signature of the rotation functions is omitted to provide you flexibility in how you implement the internals of your node.
@@ -68,173 +58,360 @@ public:
 };
 
 
-template<class Key,class Value>
-void RBTree :: rotateLeft(RBTNode<Key,Value>*& root,RBTNode<Key,Value>*& pt){
+template<class Key, class Value>
+void RBTree<Key,Value> :: put(const Key& key, const Value& value){
 
-    RBTNode<Key,Value>* pt_right = pt->right;
- 
-    pt->right = pt_right->left;
- 
-    if (pt->right != NULL){
-        pt->right->parent = pt;
-    }
- 
-    pt_right->parent = pt->parent;
- 
-    if (pt->parent == NULL){
-        root = pt_right;
-    }
- 
-    else if (pt == pt->parent->left){
-        pt->parent->left = pt_right;
-    }
- 
-    else{
-        pt->parent->right = pt_right;
-    }
- 
-    pt_right->left = pt;
-    pt->parent = pt_right;
+	BSTree<Key,Value> :: put(key,value);
+	BinaryNode<Key,Value>* node = this->getNode(key);
 
-}
- 
-template<class Key,class Value> 
-void RBTree :: rotateRight(RBTNode<Key,Value>*& root,RBTNode<Key,Value>*& pt){
-    
-    RBTNode<Key,Value>* pt_left = pt->left;
+	node->color=RED;
 
-    pt->left = pt_left->right;
- 
-    if (pt->left != NULL){
-        pt->left->parent = pt;
-    }
- 
-    pt_left->parent = pt->parent;
- 
-    if (pt->parent == NULL){
-        root = pt_left;
-    }
- 
-    else if (pt == pt->parent->left){
-        pt->parent->left = pt_left;
-    }
- 
-    else{
-        pt->parent->right = pt_left;
-    }
- 
-    pt_left->right = pt;
-    pt->parent = pt_left;
-}
+	insertRBFixup(node);
+}	
 
 
-// This function fixes violations caused by BST insertion
-template<class Key,class Value>
-void RBTree :: fixViolation(RBTree<Key,Value>*& root,RBTree<Key,Value>*& pt){
 
-    Node *parent_pt = NULL;
-    Node *grand_parent_pt = NULL;
- 
-    while ((pt != root) && (pt->color != BLACK) &&(pt->parent->color == RED)){
- 
-        parent_pt = pt->parent;
-        grand_parent_pt = pt->parent->parent;
- 
-        /*  Case : A
-            Parent of pt is left child of Grand-parent of pt */
-        if (parent_pt == grand_parent_pt->left){
- 
-            Node *uncle_pt = grand_parent_pt->right;
- 
-            /* Case : 1
-               The uncle of pt is also red
-               Only Recoloring required */
-            if (uncle_pt != NULL && uncle_pt->color == RED){
-                grand_parent_pt->color = RED;
-                parent_pt->color = BLACK;
-                uncle_pt->color = BLACK;
-                pt = grand_parent_pt;
-            }
- 
-            else{
-                /* Case : 2
-                   pt is right child of its parent
-                   Left-rotation required */
-                if (pt == parent_pt->right){
+template <class Key, class Value> 
+void RBTree<Key,Value> :: insertRBFixup(BinaryNode<Key,Value>*  node){
 
-                    rotateLeft(root, parent_pt);
-                    pt = parent_pt;
-                    parent_pt = pt->parent;
+	BinaryNode<Key,Value> *parent, *grandParent, *uncle;	
+	if(node == this->root){
+		this->root->color = BLACK;
+	}
+	else{
+		
+		while(node)
+		{
 
-                }
- 
-                /* Case : 3
-                   pt is left child of its parent
-                   Right-rotation required */
-                rotateRight(root, grand_parent_pt);
-                swap(parent_pt->color, grand_parent_pt->color);
-                pt = parent_pt;
+			parent = node->parent;
 
-            }
-        }
- 
-        /* Case : B
-           Parent of pt is right child of Grand-parent of pt */
-        else{
-            Node *uncle_pt = grand_parent_pt->left;
- 
-            /*  Case : 1
-                The uncle of pt is also red
-                Only Recoloring required */
-            if ((uncle_pt != NULL) && (uncle_pt->color == RED)){
+			if(!parent)
+				break;
 
-                grand_parent_pt->color = RED;
-                parent_pt->color = BLACK;
-                uncle_pt->color = BLACK;
-                pt = grand_parent_pt;
-            }
-            else{
-                /* Case : 2
-                   pt is left child of its parent
-                   Right-rotation required */
-                if (pt == parent_pt->left){
+			grandParent = parent->parent;
 
-                    rotateRight(root, parent_pt);
-                    pt = parent_pt;
-                    parent_pt = pt->parent;
-                
-                }
-                /* Case : 3
-                   pt is right child of its parent
-                   Left-rotation required */
-                rotateLeft(root, grand_parent_pt);
-                swap(parent_pt->color, grand_parent_pt->color);
-                pt = parent_pt;
-            }
-        }
-    }
+			//When parent is root
+			if(!grandParent){
+				break;
+			}
 
-    root->color = BLACK;
+			//When a parent of node is black
+			if(parent->color != RED){
+				break;
+			}
+
+			//When parent is left node of grand parent
+			if (parent == grandParent->left)
+			{
+				uncle  = grandParent->right;
+				if(uncle){
+					//When uncle is red
+					if(uncle->color == RED){
+
+						parent->color = BLACK;
+						uncle->color = BLACK;
+						grandParent->color=RED;
+						node = grandParent;
+					}
+					else{ 
+						//When the newly inserted node is at right
+						if(node->key > parent->key){
+							left_rotate(parent);
+						}
+										
+						node->color = BLACK;
+						grandParent->color = RED;
+						right_rotate(grandParent);
+						node = grandParent;
+					}
+				}
+				else{
+					
+					//When newly inserted node is at right
+					if(node->key > parent->key){
+						left_rotate(parent);
+					}
+				
+					node->color = BLACK;
+					grandParent->color = RED;
+					right_rotate(grandParent);
+					node = grandParent;	
+				}
+				
+			}//When parent is right nodeof grand parent
+			else{
+				
+				uncle = grandParent->left;
+
+				if(uncle){
+					//When uncle is red
+					if(uncle->color == RED){
+						parent->color = BLACK;
+						uncle->color = BLACK;
+						grandParent->color=RED;
+						node = grandParent;
+					}
+					else{
+						//When newly inserted node is at left
+						if(node->key < parent->key){
+							right_rotate(parent);
+						}
+					
+						node->color = BLACK;
+						grandParent->color = RED;
+						left_rotate(grandParent);
+						node = grandParent;	
+					}
+				}//When uncle is black
+				else{
+					//When newly inserted node is at left
+					if(node->key < parent->key){
+						right_rotate(parent);
+					}
+			
+					node->color = BLACK;
+					grandParent->color = RED;
+					left_rotate(grandParent);
+					node = grandParent;	
+				}
+			}
+		}
+	}
+
+	//Finally change color of root to black
+	this->root->color = BLACK;
 }
 
-// Function to insert a new node with given data
-template<class Key,class Value>
-void RBTree :: insert(RBTree<Key,Value>* node,Key key,Value value){
+template <class Key, class Value>
+void RBTree<Key,Value> :: left_rotate(BinaryNode<Key,Value>* z){
 
-    RBTree<Key,Value>* pt = newNode(key,value);
- 
-    // Do a normal BST insert
-    root = BSTInsert(root, pt);
- 
-    // fix Red Black Tree violations
-    fixViolation(root, pt);
+	BinaryNode<Key,Value>* y = z->right;
+	z->right = y->left;
+
+	if(y->left)
+		y->left->parent = z;
+
+	y->parent = z->parent;
+
+	if(!z->parent)
+		this->root = y;
+	else 
+		if(z == z->parent->left)
+			z->parent->left = y;
+		else 
+			z->parent->right = y;
+	
+	y->left = z;
+	z->parent = y;
 }
 
 
+template <class Key, class Value>
+void RBTree<Key,Value> :: right_rotate(BinaryNode<Key,Value>* z){
+
+	BinaryNode<Key,Value>* y = z->left;
+	z->left = y->right;
+
+	if(y->right)
+		y->right->parent = z;
+
+	y->parent = z->parent;
+
+	if(!z->parent)
+		this->root = y;
+	else 
+		if(z == z->parent->right)
+			z->parent->right = y;
+		else 
+			z->parent->left = y;
+	
+	y->right = z;
+	z->parent = y;
+}
+
+
+template <class Key, class Value>
+int RBTree<Key,Value> :: blackHeight(){
+
+	return blackHeight(this->root);
+
+}
+
+template <class Key, class Value>
+int RBTree<Key,Value> :: blackHeight(BinaryNode<Key,Value>* rt){
+
+	if (rt == NULL)   
+           return 1;
+
+    if(rt->color == BLACK)
+    	return 1 + blackHeight(rt->left);
+
+    return blackHeight(rt->left);
+}
+
+template<class Key, class Value>
+void RBTree<Key, Value>::remove(const Key& key){
+
+	BinaryNode<Key,Value>* node = this->getNode(key);
+
+	if(!node)
+		return;
+
+	if(!node->left && !node->right){
+		BinaryNode<Key,Value>* parent = node->parent;
+		BSTree<Key,Value> :: remove(key);
+		deleteRBFixup(parent);
+	}
+	else{
+		BSTree<Key,Value> :: remove(key);
+	
+		deleteRBFixup(node);
+	}
+}
+
+template <class Key, class Value>
+void RBTree<Key,Value> :: deleteRBFixup(BinaryNode<Key,Value>* rt){
+
+	if(rt){
+		BinaryNode<Key, Value>  *sibling, *parent = rt->parent;
+		while(rt){
+
+			if(rt != this->root){
+				parent = rt->parent;
+			}
+
+			if(!rt->parent)
+				break;
+ 
+			if(rt == this->root){
+				break;
+			}
+			else 
+				if(rt->color != BLACK)
+					break;
+
+			if(rt->key < rt->parent->key){
+				
+				sibling = rt->parent->right;
+				
+				if(sibling->color == RED){
+					sibling->color = BLACK;
+					rt->parent->color = RED;
+					left_rotate(rt->parent);
+					sibling = rt->parent->right;
+				}
+
+				if(!sibling->right && !sibling->left){
+					sibling->color = RED;
+					rt = rt->parent;	
+				}
+				else{
+					if(sibling->left->color == BLACK && sibling->right->color == BLACK){
+						sibling->color = RED;
+						rt = rt->parent;
+					}
+					else{
+						 if(!sibling->right){
+
+							sibling->left->color = BLACK;
+							sibling->color = RED;
+							right_rotate(sibling);
+							
+							sibling = rt->parent->right;
+						}
+						else{
+							if(sibling->right->color == BLACK){
+								sibling->left->color = BLACK;
+								sibling->color = RED;
+								right_rotate(sibling);
+					
+								sibling = rt->parent->right;
+							}
+	
+							sibling->color = rt->parent->color;
+							rt->parent->color = BLACK;
+							sibling->right->color = BLACK;
+							left_rotate(rt->parent);
+
+							rt=this->root;
+						}
+					}
+				}
+			}
+			else{
+				sibling = rt->parent->left;
+			
+				if(sibling->color == RED){
+
+					sibling->color = BLACK;
+					rt->parent->color = RED;
+					right_rotate(rt->parent);
+					sibling = rt->parent->left;
+				}
+				
+				if(!sibling->right && !sibling->left){
+					sibling->color=RED;
+					rt = rt->parent;	
+				}
+				else{
+					if(sibling->right->color == BLACK && sibling->left->color == BLACK){
+						sibling->color = RED;
+						rt = rt->parent;
+					}
+					else{ 
+						if(!sibling->left){
+							sibling->right->color = BLACK;
+							sibling->color = RED;
+							left_rotate(sibling);
+							
+							sibling = rt->parent->left;
+						}
+						else{
+							if(sibling->left->color == BLACK){
+
+								sibling->right->color = BLACK;
+								sibling->color = RED;
+								left_rotate(sibling);
+								sibling = rt->parent->left;
+							}
+						
+							sibling->color = rt->parent->color;
+							rt->parent->color = BLACK;
+							sibling->left->color = BLACK;
+							right_rotate(rt->parent);
+							rt = this->root;
+						}
+					}
+				}	
+			}
+		}
+
+		rt->color = BLACK;
+	}
+}
+
+
+template <class Key, class Value>
+int RBTree<Key,Value> :: color(Key key){
+
+	if(this->has(key)){
+		
+		BinaryNode<Key,Value>*  node = this->getNode(key);
+
+		if(node->color == RED){
+			
+			std::cout << "RED";
+		}
+		else{
+			std::cout << "BLACK";
+		}
+	}
+}
 
 
 //end of namespace
 }
+
 
 
 #endif /* ifndef RBTree_HPP_ */
