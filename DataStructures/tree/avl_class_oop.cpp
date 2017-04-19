@@ -31,8 +31,6 @@ protected:
 
 	node* insert_helper(node* root,int data);
 
-	node* remove_helper(node* root,int data);
-
 	void pre_order_helper(node* root);
 
 	void in_order_hepler(node* root);
@@ -48,6 +46,10 @@ protected:
 	int getBalance(node* n);
 
 	node* newNode(int data);
+
+	node* deleter(node* root,int data);
+
+	node* inorder_successor(node* root);
 
 	 
 public:
@@ -76,13 +78,13 @@ int main(){
 	a.insert(5);
 	a.insert(6);
 
-	a.in_order();
+	a.pre_order();
 
+	a.remove(4);
 
 
 	return 0;
 }
-
 
 node :: node(){
 
@@ -124,27 +126,52 @@ node* AVL :: insert_helper(node* root,int data){
 		return root;
 	}
 
-	return n;
-}
+	root -> height = 1+ max(getHeight(root -> left),getHeight(root -> right));
 
-void AVL :: remove(int data){
+	int bal = getBalance(root);
 
-}
+	if(bal > 1){
 
-node* AVL :: remove_helper(node* root,int data){
+		//left left case
+		if(getBalance(root->left) >= 0){
+			return rightRotation(root);
+		}
+		//left right
+		else{
+			root -> left = leftRotation(root -> left);
+			return rightRotation(root);
+		}
+	}
 
+	if(bal < -1){
+
+		//right right case
+		if(getBalance(root->right) <= 0){
+			return leftRotation(root);
+		}
+		//right left case
+		else{
+			root -> right = rightRotation(root -> right);
+			return leftRotation(root);
+		}
+	}
+
+	return root;
 }
 
 void AVL :: pre_order(){
 	pre_order_helper(root);
+	cout<<endl;
 }
 
 void AVL :: post_order(){
 	post_order_helper(root);
+	cout<<endl;
 }
 
 void AVL :: in_order(){
 	in_order_hepler(root);
+	cout<<endl;
 }
 
 void AVL :: in_order_hepler(node* root){
@@ -211,5 +238,98 @@ int AVL :: getBalance(node* n){
 }
 
 int AVL :: getHeight(node* n){
-	return n -> height;
+	if(n!=NULL){
+		return n -> height;		
+	}
+
+	return 0;
+}
+
+void AVL :: remove(int data){
+
+	root = deleter(root,data);
+
+}
+
+node* AVL :: deleter(node* root,int data){
+
+	if(root == NULL){
+		return root;
+	}
+
+	if(root -> data > data){
+		root -> left = deleter(root -> left,data);
+	}else if(root -> data < data){
+		root -> right = deleter(root -> right,data);
+	}else{
+
+		if( root -> left == NULL){
+			node* temp = root -> right;
+			delete root;
+			return temp;
+		}
+
+		if(root -> right == NULL){
+			node* temp = root -> left;
+			delete root;
+			return temp;
+		}
+
+		node* inorder_suc = inorder_successor(root -> right);
+
+		root -> data = inorder_suc -> data;
+
+		root -> right = deleter(root -> right,inorder_suc -> data); 
+		
+	}
+
+	pre_order();
+
+	if(root == NULL){
+		return root;
+	}
+
+	root -> height = 1 + max(getHeight(root -> left),getHeight(root -> right));
+
+	int bal = getBalance(root);
+
+	if(bal > 1){
+
+		//left left case
+		if(data < root -> left -> data){
+			return rightRotation(root);
+		}
+		//left right
+		else{
+			root -> left = leftRotation(root -> left);
+			return rightRotation(root);
+		}
+	}
+
+	if(bal < -1){
+
+		//right right case
+		if(data > root -> right -> data){
+			return leftRotation(root);
+		}
+		//right left case
+		else{
+			root -> right = rightRotation(root -> right);
+			return leftRotation(root);
+		}
+	}
+
+	return root;
+
+}
+
+node* AVL :: inorder_successor(node* root){
+
+	node* suc = root;
+
+	while(suc -> left != NULL){
+		suc = suc -> left;
+	}
+
+	return suc;
 }
