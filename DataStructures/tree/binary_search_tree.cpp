@@ -72,6 +72,7 @@ void inorder(node* root){
 bool search(node* root,int val){
 
 	if(root!=NULL){
+
 		if(root -> data == val){
 			return true;
 		}
@@ -91,9 +92,9 @@ node* InorderSuccessor(node* root){
 
 	node* current = root;
 
-	while(current -> right != NULL){
-		current = current -> right;
-	}
+	while(current -> left != NULL){
+		current = current -> left;
+	}	
 
 	return current;
 }
@@ -122,7 +123,7 @@ node* deleteNode(node* root,int val){
 			return temp_left;
 		}
 
-		node* inorder_successor = InorderSuccessor(root);
+		node* inorder_successor = InorderSuccessor(root -> right);
 
 		root -> data = inorder_successor->data;
 

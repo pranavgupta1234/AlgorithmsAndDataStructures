@@ -85,7 +85,7 @@ BinaryNode<Key,Value>* AVL<Key,Value> :: newNode(Key key,Value value){
 
 }
 
-template<class Key,class Value>
+templa  te<class Key,class Value>
 int AVL<Key,Value> :: max_val(int a,int b){
   return (a > b ? a : b);
 }

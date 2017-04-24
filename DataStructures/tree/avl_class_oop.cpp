@@ -126,9 +126,9 @@ node* AVL :: insert_helper(node* root,int data){
 		return root;
 	}
 
-	root -> height = 1+ max(getHeight(root -> left),getHeight(root -> right));
+	root -> height = 1+ max(getHeight(root -> left),getHeight(root -> right));				
 
-	int bal = getBalance(root);
+	int bal = getBalance(root);													// imbalancing occurs around root (if occurs)
 
 	if(bal > 1){
 
@@ -136,7 +136,7 @@ node* AVL :: insert_helper(node* root,int data){
 		if(getBalance(root->left) >= 0){
 			return rightRotation(root);
 		}
-		//left right
+		//left right case
 		else{
 			root -> left = leftRotation(root -> left);
 			return rightRotation(root);
