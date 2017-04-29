@@ -49,11 +49,14 @@ public:
 	// construct a heap from the elements of a seqLinearList
 	MinPriorityQueue(const LinearList<T>& v);
 
+	//copy constructor
+	MinPriorityQueue(MinPriorityQueue<T>& q);
+
 	// insert a value to the heap
 	void insert(const T& a);
 
 	// get the minimum element from the heap
-	inline T minimum();
+	inline T& minimum();
 
 	// return the minimum element from the heap and remove it
 	// as well
@@ -115,13 +118,25 @@ int MinPriorityQueue<T> :: right_child(const size_t& pos){
 
 template<typename T>
 MinPriorityQueue<T> :: MinPriorityQueue(){
-	heap_size = heap.size();
+
+	//heap.resize(11);
+	heap_size = 0;
 }
 
 template<typename T>
 MinPriorityQueue<T> :: MinPriorityQueue(const LinearList<T>& v){
 	build_heap(v);
 }
+
+template<typename T>
+MinPriorityQueue<T> :: MinPriorityQueue(MinPriorityQueue<T>& q){
+	
+	heap_size = q.size_heap();
+		
+	for(int i = 0; i < heap_size; i++)
+		heap.push_back(q.heap[i]);
+}
+
 
 template<typename T>
 void MinPriorityQueue<T> :: insert(const T& a){
@@ -137,7 +152,7 @@ void MinPriorityQueue<T> :: insert(const T& a){
 }	
 
 template<typename T>
-T MinPriorityQueue<T> :: minimum(){
+T& MinPriorityQueue<T> :: minimum(){
 	if(heap_size>0){
 		return heap[0];
 	}
@@ -172,14 +187,20 @@ int MinPriorityQueue<T> :: size_heap(){
 
 template<typename T>
 void MinPriorityQueue<T> :: build_heap(const LinearList<T>& v){
+
 	for(int i=0;i<v.size();i++){
 		insert(v[i]);
 	}
+
 }
 
 template<typename T>
 bool MinPriorityQueue<T> :: empty(){
-	return heap_size == 0;
+	if(heap_size==0){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 template<typename T>

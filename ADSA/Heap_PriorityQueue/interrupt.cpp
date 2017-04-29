@@ -15,7 +15,9 @@ private:
 
 public:
 
-	interrupt();														//required for call to new interruot inside list header 
+	interrupt(){
+
+	}																		//required for call to new interrupt inside list header 
 
 	interrupt(const int did,const int bt,const int d,const int pv);
 
@@ -56,7 +58,7 @@ public:
 	}
 
 	void setStatus(string st){
-		status = st;
+		this -> status = st;
 	}
 
 	string getStatus(){
@@ -74,14 +76,6 @@ public:
 
 };
 
-interrupt :: interrupt(){
-
-	this -> device_id = 0;
-	this -> burst_time = 0;
-	this -> delay = 0;
-	this -> priority_value = 0;	
-}
-
 interrupt :: interrupt(const int did,const int bt,const int d,const int pv){
 	
 	this -> device_id = did;
@@ -91,6 +85,14 @@ interrupt :: interrupt(const int did,const int bt,const int d,const int pv){
 	status = "QUEUED";	
 }
 
+void display(cs202::MinPriorityQueue<interrupt> i){
+
+	while(!i.empty()){
+		i.extract_min().display();
+	}
+
+	cout<<"\n";
+}
 int main(){
 
 	cs202::MinPriorityQueue<interrupt> interrupts;
@@ -124,6 +126,7 @@ int main(){
 				total_burst_time -= DEVICE_TASK.getBurstTime();
 
 				DEVICE_TASK.display();
+
 			}else{
 				break;
 			}
@@ -139,24 +142,17 @@ int main(){
 		}
 
 		interrupts.insert(interrupt(id, burst_t, delay_t, priority));
-		total_burst_time += burst_t;
-		
+		total_burst_time += burst_t;		
 
 		interrupts.minimum().setStatus("In Progress");
 
-		cout<<"\nLoaded Tasks in Processor";
-		cout<<"\nID\tBurst Time\tDelay Time\tPriority\tStatus\n";
-
-		while(!interrupts.empty()){
-			interrupts.extract_min().display();
-		}
-
-		cout<<"\n";
+		display(interrupts);
+		
 		char e;
-		cout<<"Exit(y/n) : ";
+		cout<<"Press y to exit or n to continue : ";
 		cin>>e;
 
-		if(e == 'y' || e == 'Y'){
+		if(e == 'y' or e == 'Y'){
 
 			cout<<"\nID\tBurst Time\tDelay Time\tPriority\tStatus\n";
 			while(!interrupts.empty()){
