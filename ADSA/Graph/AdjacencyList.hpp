@@ -58,6 +58,7 @@ public:
 
   	int OutDegreeHelper(int i);
 
+  	cs202::LinearList<int>* getList(int i);
 
 };
 
@@ -105,15 +106,18 @@ int AdjacencyList :: vertices(){
 
 void AdjacencyList :: add(int i,int j){
 
-	graph[i] -> push_back(j);
-	E++;
-
+	if(!(graph[i] -> find(j))){
+		graph[i] -> push_back(j);
+		E++;
+	}
 }
 
 void AdjacencyList :: remove(int i,int j){
 
-	graph[i] -> erase(j);
-	E--;
+	if(graph[i] -> find(j)){
+		graph[i] -> erase(j);
+		E--;		
+	}
 }
 
 int AdjacencyList :: degree(int i){
@@ -152,6 +156,12 @@ void AdjacencyList :: print(){
 }
 
 int** AdjacencyList :: getGraph(){
+
+}
+
+cs202::LinearList<int>* AdjacencyList :: getList(int i){
+
+	return graph[i];
 
 }
 

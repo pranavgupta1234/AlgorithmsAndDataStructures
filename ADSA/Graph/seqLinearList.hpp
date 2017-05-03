@@ -110,6 +110,10 @@ template<class Item> class LinearList{
 
 		void print();
 
+		Item* getRef(){
+			return element;
+		};
+
 
 		//we can also define this itertor class by defining just simply class iterator{};
 		//and then externally use LinearList::iterator:: here define the function definitions

@@ -5,12 +5,15 @@
  * Subclasses AbstractGraph
  */
 #include "AbstractGraph.hpp" 
+#include "queue.hpp"
+#include "stack.hpp"
 
 class UndirectedGraph : AbstractGraph {
 
 private:
 
   GraphAdjacencyBase* undirectedGraph;
+  char rep;
 
 
 public:
@@ -64,13 +67,13 @@ public:
    * Does a depth first traversal of the entire graph.
    * Runs the given function work, with the value of each vertex.
    */
-  //virtual void dfs(void (*work)(int&));
+  virtual void dfs(void (*work)(int&));
   /*
    * Function bfs:
    * Does a breadth first traversal of the entire graph.
    * Runs the given function work, with the value of each vertex.
    */
-  //virtual void bfs(void (*work)(int&));
+  virtual void bfs(void (*work)(int&));
 
    void print();
 
@@ -81,15 +84,15 @@ UndirectedGraph :: UndirectedGraph(int vertices,char mode){
   switch(mode){
     case 'm':
 
-      undirectedGraph = new AdjacencyMatrix(vertices);
-
-      break;
+        undirectedGraph = new AdjacencyMatrix(vertices);
+        rep = 'm';
+        break;
 
     case 'l':
 
-      undirectedGraph = new AdjacencyList(vertices);
-
-      break;
+        undirectedGraph = new AdjacencyList(vertices);
+        rep = 'l';
+        break;
   }
 
 }
@@ -137,5 +140,133 @@ void UndirectedGraph :: print(){
   undirectedGraph ->print();  
 
 }
+
+void UndirectedGraph :: bfs(void (*work)(int&)){
+
+    int** g = undirectedGraph -> getGraph();
+
+    bool* vertices = new bool[undirectedGraph -> vertices()];
+  
+    for(int k=0 ; k < undirectedGraph -> vertices() ; k++){
+        vertices[k]=false;
+    }
+
+    for(int i=0 ; i<undirectedGraph -> vertices() ; i++){
+
+        if(!vertices[i]){
+
+
+            //for visited nodes
+            q::queue<int> q;
+
+            vertices[i] = true;
+            q.push(i);
+
+            while(!q.empty()){
+
+                //deque and print
+                int vis = q.front();
+                work(vis);                
+                q.pop();
+
+                if(rep == 'm'){
+                    for(int j = 0 ; j < undirectedGraph -> vertices() ; j++){
+
+                        int v = (g[vis][j] != 0 ? j : 0);
+                        if(v != 0){
+                            if(!vertices[v]){
+                                vertices[v] = true;
+                                q.push(v);
+                            }                
+                        }
+                    }            
+                }else{
+
+                    cs202::LinearList<int>* g = undirectedGraph -> getList(vis);
+
+                    for(int k=0 ; k< g->length() ; k++){
+
+                        int v = (*g)[k];
+                
+                        if(!vertices[v]){
+                            vertices[v] = true;
+                            q.push(v);
+                        }
+                    }  
+                }
+            }
+
+        }
+
+    }
+}
+
+void UndirectedGraph :: dfs(void (*work)(int&)){
+
+    bool* vertices = new bool[undirectedGraph -> vertices()];
+  
+    for(int k=0 ; k < undirectedGraph -> vertices() ; k++){
+        vertices[k]=false;
+    }
+
+    for(int i=0 ; i < undirectedGraph -> vertices() ; i++){
+
+        if(!vertices[i]){
+            // Create a stack for DFS
+            stk::stack<int> stack;
+
+            // Push the current source node.
+            stack.push(i);
+ 
+            while (!stack.empty()){
+        
+                // Pop a vertex from stack and print it
+                int s = stack.top();
+                stack.pop();
+ 
+                // Stack may contain same vertex twice. So
+                // we need to print the popped item only
+                // if it is not visited.
+                if (!vertices[s]){
+                    work(s);
+                    vertices[s] = true;
+                }
+ 
+                // Get all adjacent vertices of the popped vertex s
+                // If a adjacent has not been visited, then push it
+                // to the stack.
+                if(rep == 'm'){
+
+                    int** g = undirectedGraph -> getGraph();
+
+                    for(int i = 0 ; i < undirectedGraph -> vertices() ; i++){
+
+                        int v = (g[s][i] != 0 ? i : 0);
+                        if(v != 0){
+                            if(!vertices[v]){
+                                stack.push(v);                    
+                            }                
+                        }
+                    }            
+                }else{
+
+                    cs202::LinearList<int>* g = undirectedGraph -> getList(s);
+
+                    for(int j=0 ; j< g->length() ; j++){
+
+                        int v = (*g)[j];
+
+                        if(!vertices[v]){
+                            stack.push(v);
+                        }
+                    }
+                }
+            }
+        }
+
+    } 
+}
+
+
 
 #endif /* ifndef UNDIRECTED_GRAPH */

@@ -1,6 +1,8 @@
 #ifndef DIRECTED_GRAPH
 #define DIRECTED_GRAPH 1
 #include "AbstractGraph.hpp"
+#include "queue.hpp"
+#include "stack.hpp"
 /*
  * A class to represent a directed graph.
  */
@@ -62,13 +64,13 @@ public:
     * Does a depth first traversal of the entire graph.
     * Runs the given function work, with the value of each vertex.
     */
-    //void dfs(void (*work)(int&));
+    void dfs(void (*work)(int&));
     /*
     * Function bfs:
     * Does a breadth first traversal of the entire graph.
     * Runs the given function work, with the value of each vertex.
     */
-    //void bfs(void (*work)(int&));
+    void bfs(void (*work)(int&));
 
 
     void print();
@@ -173,5 +175,120 @@ void DirectedGraph :: print(){
 
 }
 
+void DirectedGraph :: bfs(void (*work)(int&)){
+
+    int** g = directedGraph -> getGraph();
+
+    bool* vertices = new bool[directedGraph -> vertices()];
+  
+    for(int k=0 ; k < directedGraph -> vertices() ; k++){
+        vertices[k]=false;
+    }
+
+    //for visited nodes
+    q::queue<int> q;
+
+    vertices[0] = true;
+    q.push(0);
+
+    while(!q.empty()){
+
+        //deque and print
+        int vis = q.front();
+        work(vis);                
+        q.pop();
+        if(rep == 'm'){
+            for(int i = 0 ; i < directedGraph -> vertices() ; i++){
+
+                int v = (g[vis][i] != 0 ? i : 0);
+                if(v != 0){
+                    if(!vertices[v]){
+                        vertices[v] = true;
+                        q.push(v);
+                    }                
+                }
+
+            }            
+        }else{
+
+            cs202::LinearList<int>* g = directedGraph -> getList(i);
+
+            for(int j=0 ; j< g->length() ; j++){
+
+                int v = (*g)[j];
+                
+                if(!vertices[v]){
+                    vertices[v] = true;
+                    q.push(v);
+                }
+            }
+        }
+    }
+}
+
+void DirectedGraph :: dfs(void (*work)(int&)){
+
+    bool* vertices = new bool[directedGraph -> vertices()];
+  
+    for(int k=0 ; k < directedGraph -> vertices() ; k++){
+        vertices[k]=false;
+    }
+
+    for(int i=0 ; i < directedGraph -> vertices() ; i++){
+
+        if(!vertices[i]){
+            // Create a stack for DFS
+            stk::stack<int> stack;
+
+            // Push the current source node.
+            stack.push(i);
+ 
+            while (!stack.empty()){
+        
+                // Pop a vertex from stack and print it
+                int s = stack.top();
+                stack.pop();
+ 
+                // Stack may contain same vertex twice. So
+                // we need to print the popped item only
+                // if it is not visited.
+                if (!vertices[s]){
+                    work(s);
+                    vertices[s] = true;
+                }
+ 
+                // Get all adjacent vertices of the popped vertex s
+                // If a adjacent has not been visited, then push it
+                // to the stack.
+                if(rep == 'm'){
+
+                    int** g = directedGraph -> getGraph();
+
+                    for(int i = 0 ; i < directedGraph -> vertices() ; i++){
+
+                        int v = (g[s][i] != 0 ? i : 0);
+                        if(v != 0){
+                            if(!vertices[v]){
+                                stack.push(v);                    
+                            }                
+                        }
+                    }            
+                }else{
+
+                    cs202::LinearList<int>* g = directedGraph -> getList(s);
+
+                    for(int j=0 ; j< g->length() ; j++){
+
+                        int v = (*g)[j];
+
+                        if(!vertices[v]){
+                            stack.push(v);
+                        }
+                    }
+                }
+            }
+        }
+    } 
+}
 
 #endif /* ifndef DIRECTED_GRAPH */

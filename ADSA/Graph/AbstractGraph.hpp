@@ -43,13 +43,13 @@ class AbstractGraph {
    * Does a depth first traversal of the entire graph.
    * Runs the given function work, with the value of each vertex.
    */
-  //virtual void dfs(void (*work)(int&)) = 0;
+  virtual void dfs(void (*work)(int&)) = 0;
   /*
    * Function bfs:
    * Does a breadth first traversal of the entire graph.
    * Runs the given function work, with the value of each vertex.
    */
-  //virtual void bfs(void (*work)(int&)) = 0;
+  virtual void bfs(void (*work)(int&)) = 0;
 
 };
 #endif /* ifndef ABSTRACT_GRAPH */

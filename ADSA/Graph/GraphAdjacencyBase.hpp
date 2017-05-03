@@ -1,5 +1,6 @@
 #ifndef GRAPH_ADJACENCY_BAG
 #define GRAPH_ADJACENCY_BAG 1
+#include "seqLinearList.hpp"
 /*
  * A base class which can denote any Graph Adjacency representation.
  * Subclasse by AdjacencyMatrix and AdjacencyList
@@ -45,6 +46,8 @@ public:
   virtual int** getGraph() = 0;
 
   virtual int OutDegreeHelper(int i) = 0;
+
+  virtual cs202::LinearList<int>* getList(int i) = 0;
 
 };
 

@@ -57,6 +57,7 @@ public:
 
   int OutDegreeHelper(int i);
 
+  cs202::LinearList<int>* getList(int i);
 
 };
 
@@ -81,15 +82,19 @@ AdjacencyMatrix :: AdjacencyMatrix(int V){
 	}
 
 	for(int i=0 ; i<V ; i++){
+
 		for(int j=0 ; j< V ; j++){
 			graph[i][j] = 0;
 		}
+
 	}
 
 }
 
 bool AdjacencyMatrix :: edgeExists(int i , int j){
+
 	return (graph[i][j] == 1 ? true : false);
+
 }
 
 int AdjacencyMatrix :: vertices(){
@@ -155,6 +160,10 @@ int** AdjacencyMatrix :: getGraph(){
 
 int AdjacencyMatrix :: OutDegreeHelper(int i){
 
+}
+
+cs202::LinearList<int>* AdjacencyMatrix :: getList(int i){
+	
 }
 
 #endif /* ifndef ADJACENCY_MATRIX */
