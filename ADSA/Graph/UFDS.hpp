@@ -11,6 +11,7 @@
 namespace cs202 {
 
 class UFDS {
+
   // Private attributes and functions for class
   // If you want to add any more variables, please add them
   // and give a valid reason for their use.
@@ -21,6 +22,7 @@ class UFDS {
   // stores parent and rank for each vertex
   // You may add new members to the node, with explanation as to
   // why the members were necessary.
+
   class node {
     public:
       int parent;
@@ -30,6 +32,7 @@ class UFDS {
   LinearList<node> vertex;
 
   public:
+
     // Create an empty union find data structure with N isolated sets.
     UFDS(const unsigned int& N);
 
@@ -52,8 +55,10 @@ class UFDS {
     int num_disjoint_sets();
     
     // Return the size of the set containing object x.
-    int size_set (const unsigned int& x); 
-  };    
+    int size_set (const unsigned int& x);
+
+  };
+      
 }
 
 #endif  /* UFDS_ */

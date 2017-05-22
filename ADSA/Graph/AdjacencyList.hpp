@@ -4,6 +4,45 @@
 #include "seqLinearList.hpp"
 
 
+//to store destination and weight of an edge
+class edgeWeight{
+
+public:
+
+	int dest;
+	int weight;
+
+	edgeWeight(){}
+
+	edgeWeight(int d, int w){
+	
+		dest = d;
+		weight = w;
+	
+	}
+
+	bool operator==(const edgeWeight& p){
+	
+		return (dest == p.dest);
+	
+	}
+
+	void operator=(const edgeWeight& p){
+	
+		dest = p.dest;
+		weight = p.weight;
+	
+	}
+
+	bool operator!=(const edgeWeight& p){
+	
+		return (dest != p.dest);
+	
+	}
+	
+};
+
+
 class AdjacencyList : public GraphAdjacencyBase {
 
 private:

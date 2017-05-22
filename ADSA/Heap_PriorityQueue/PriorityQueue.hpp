@@ -1,8 +1,3 @@
-// Purpose: Learn Heaps And PriorityQueue
-// Author: Pranav Gupta
-// Date of Creation: 
-// Bugs:
-
 #ifndef MIN_PRIORITY_QUEUE
 #define MIN_PRIORITY_QUEUE 1
 #include "seqLinearList.hpp"

@@ -93,7 +93,7 @@ AdjacencyMatrix :: AdjacencyMatrix(int V){
 
 bool AdjacencyMatrix :: edgeExists(int i , int j){
 
-	return (graph[i][j] == 1 ? true : false);
+	return (graph[i][j] != 0 ? true : false);
 
 }
 
@@ -105,12 +105,12 @@ int AdjacencyMatrix :: edges(){
 	return E;
 }
 
-void AdjacencyMatrix :: add(int i,int j){
+void AdjacencyMatrix :: add(int i,int j,int w){
 
 	E++;
 
 	if(i < V and j < V){
-		graph[i][j] = 1;
+		graph[i][j] = w;
 	}
 }
 
@@ -129,7 +129,7 @@ int AdjacencyMatrix :: degree(int i){
 
 	for(int j=0 ; j < V ; j++){
 
-		if(graph[i][j] == 1){
+		if(graph[i][j] != 0){
 			deg++;
 		}
 	}
