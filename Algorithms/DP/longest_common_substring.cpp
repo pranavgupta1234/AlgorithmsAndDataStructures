@@ -25,7 +25,7 @@ string LCS(string str1,string str2){
 	int arr[str1.length()+1][str2.length()+1];
 	string result;
 
-	memset(arr,0,(str1.length()+1)*(str2.length()+1)*4);
+	memset(arr,0,(str1.length()+1)*(str2.length()+1)*sizeof(int));
 
 	for(int i=1 ; i <= str1.length() ; i++){
 		for(int j=1 ; j <= str2.length() ; j++){
