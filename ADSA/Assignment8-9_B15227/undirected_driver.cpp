@@ -32,7 +32,6 @@ int options(){
 void readFromFile(UndirectedGraph& graph){
 
 	ifstream read;
-
 	string filePath;
 
 	cout<<"Enter address of input file : ";
@@ -50,7 +49,7 @@ void readFromFile(UndirectedGraph& graph){
 
 		read >> data;
 
-		if(data == 1)
+		if(data != 0)
 			graph.add(counter/graph.vertices(), counter%graph.vertices(), data);
 		
 		counter++;

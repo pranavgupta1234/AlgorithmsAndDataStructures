@@ -30,7 +30,12 @@ int main(){
 			if(arr[i] > j){
 				dpTable[i][j] = dpTable[i-1][j];
 			}else{
-				dpTable[i][j] = dpTable[i-1][j-arr[i]];
+				if(dpTable[i-1][j] == true){
+					dpTable[i][j] = true;
+				}else{
+					dpTable[i][j] = dpTable[i-1][j-arr[i]];
+				}
+
 			}
 		}
 	}

@@ -9,8 +9,8 @@ class AdjacencyMatrix : public GraphAdjacencyBase {
 
 private:
 
-	int** adjMatrix;
-	int nVertices;
+	int** graphMatrix;
+	int V;
 
 public:
 	AdjacencyMatrix(int v);
@@ -55,84 +55,84 @@ public:
 
 AdjacencyMatrix::AdjacencyMatrix(int v){
 
-	nVertices = v;
-	adjMatrix = new int*[nVertices];
+	V = v;
+	graphMatrix = new int*[V];
 
-	for(int i = 0; i < nVertices; i++){
-		adjMatrix[i] = new int[nVertices];
+	for(int i = 0; i < V; i++){
+		graphMatrix[i] = new int[V];
 
-		for (int j = 0; j < nVertices; j++){
-			adjMatrix[i][j] = 0;
+		for (int j = 0; j < V; j++){
+			graphMatrix[i][j] = 0;
 		}
 	}
 }
 
 AdjacencyMatrix::~AdjacencyMatrix(){
 
-	for (int i = 0; i < nVertices; ++i){
+	for (int i = 0; i < V; ++i){
 		
-		delete[] adjMatrix[i];
+		delete[] graphMatrix[i];
 	}
 
-	delete[] adjMatrix;
+	delete[] graphMatrix;
 }
 
 bool AdjacencyMatrix::edgeExists(int i, int j){
 
 
-	return (adjMatrix[i][j] != 0);
+	return (graphMatrix[i][j] != 0);
 
 }
 
 int AdjacencyMatrix::vertices(){
 
-	return nVertices;
+	return V;
 }
 
 int AdjacencyMatrix::edges(){
 
-	int nEdges = 0;
+	int E = 0;
 
-	for(int i = 0; i < nVertices; i++)
-		for (int j = 0; j < nVertices; j++)
-			if(adjMatrix[i][j] != 0)
-				nEdges++;
+	for(int i = 0; i < V; i++)
+		for (int j = 0; j < V; j++)
+			if(graphMatrix[i][j] != 0)
+				E++;
 
-	return nEdges;
+	return E;
 }
 
 void AdjacencyMatrix::add(int i, int j, int w){
 
-	adjMatrix[i][j] = w;
+	graphMatrix[i][j] = w;
 }
 
 void AdjacencyMatrix::remove(int i, int j){
 
-	adjMatrix[i][j] = 0;
+	graphMatrix[i][j] = 0;
 }
 
 int AdjacencyMatrix::degree(int i){
 
 	int nDegree = 0;
 
-	for(int j = 0; j < nVertices; j++)
-		if(adjMatrix[i][j] != 0)
+	for(int j = 0; j < V; j++)
+		if(graphMatrix[i][j] != 0)
 			nDegree++;
 
-	for(int j = 0; j < nVertices; j++)
-		if(adjMatrix[j][i] != 0)
+	for(int j = 0; j < V; j++)
+		if(graphMatrix[j][i] != 0)
 			nDegree++;
 
 	return nDegree;
 }
 
 LinearList<LinearList<edge> > AdjacencyMatrix::getAdjacent(){
-	LinearList<LinearList<edge> > adjNodes(nVertices);
+	LinearList<LinearList<edge> > adjNodes(V);
 
-	for(int i = 0; i < nVertices; i++)
-		for(int j = 0; j < nVertices; j++)
-			if(adjMatrix[i][j] != 0)
-				adjNodes[i].push_back(edge(i, j, adjMatrix[i][j]));
+	for(int i = 0; i < V; i++)
+		for(int j = 0; j < V; j++)
+			if(graphMatrix[i][j] != 0)
+				adjNodes[i].push_back(edge(i, j, graphMatrix[i][j]));
 
 	return adjNodes; 
 }

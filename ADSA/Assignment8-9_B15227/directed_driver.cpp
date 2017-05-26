@@ -26,7 +26,7 @@ void readFromFile(DirectedGraph& graph){
 
 		read >> data;
 
-		if(data == 1)
+		if(data != 0)
 			graph.add(counter/graph.vertices(), counter%graph.vertices(), data);
 		
 		counter++;

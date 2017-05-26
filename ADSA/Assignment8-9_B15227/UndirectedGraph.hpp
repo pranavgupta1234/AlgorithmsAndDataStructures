@@ -1,38 +1,32 @@
-#ifndef DIRECTED_GRAPH
-#define DIRECTED_GRAPH 1
-#include "AbstractGraph.hpp"
-
-using namespace std;
-using namespace cs202;
+#ifndef UNDIRECTED_GRAPH
+#define UNDIRECTED_GRAPH 1
 /*
- * A class to represent a directed graph.
+ * A class to represent an UndirectedGraph
+ * Subclasses AbstractGraph
  */
-class DirectedGraph : public AbstractGraph {
+#include "AbstractGraph.hpp"
+#include "minPriorityQueue.hpp"
+
+class UndirectedGraph : public AbstractGraph {
 private:
 
   GraphAdjacencyBase* graph;
 
 public:
   /*
-   * Constructor: DirectedGraph
+   * Constructor: UndirectedGraph
    *
    * Parameters: mode
    * Used to decide which representation to use
    * 'm' for AdjacencyMatrix
    * 'l' for AdjacencyList
    */
-  DirectedGraph(int numVertices, char rep);
+  UndirectedGraph(int vertices, char mode);
   /*
-   * Function: indegree
-   * Returns the indegree of a vertex
+   * Returns the degree of the vertex.
    */
-  int indegree(int i);
-  /*
-   * Function: outdegree
-   * Returns the outdegree of a vertex.
-   */
-  int outdegree(int i);
-  /*
+  int degree(int i);
+    /*
    * Function: edgeExists
    * Returns true if an edge exists between vertices i and j, false otherwise.
    */
@@ -74,17 +68,16 @@ public:
    * Finds minimum spaning of the graph
    * Runs the given funciton work with the value of each node in tree
    */
+  void kruskal(void (*work)(int&, int&, int&));
 
-   void primMST();
-
-   void kruskal(void (*work)(int&, int&, int&));
+  void primMST();
 
 };
 
-DirectedGraph::DirectedGraph(int numVertices, char rep){
+UndirectedGraph::UndirectedGraph(int numVertices, char rep){
 
   if(rep != 'm' && rep != 'M' && rep != 'l' && rep != 'L'){
-    cout<<"**Invalid mode. Using adjacency list mode as default.\n";
+    cout<<"Invalid mode. using l by default.\n";
     rep = 'l';
   }
 
@@ -94,56 +87,56 @@ DirectedGraph::DirectedGraph(int numVertices, char rep){
   else{
     graph = new AdjacencyList(numVertices); 
   }
+
 }
 
-int DirectedGraph::indegree(int i){
+int UndirectedGraph::degree(int i){
 
-  int degree = 0;
-  for(int j = 0; j < graph->vertices(); j++){
-    if(j != i && graph->edgeExists(j, i))
-      degree++;
-  }
-
-  return degree;
+  if(edgeExists(i, i))
+    return (graph->degree(i) + 3) / 2;
+  else
+    return graph->degree(i) / 2;
 }
 
-int DirectedGraph::outdegree(int i){
-
-  int degree = 0;
-  for(int j = 0; j < graph->vertices(); j++){
-    if(j != i && graph->edgeExists(i, j))
-      degree++;
-  }
-
-  return degree;
-}
-
-bool DirectedGraph::edgeExists(int i, int j){
+bool UndirectedGraph::edgeExists(int i, int j){
 
   return graph->edgeExists(i, j);
 }
 
-int DirectedGraph::edges(){
+int UndirectedGraph::edges(){
 
-  return graph->edges();
+  int E = 0;
+
+  for(int i = 0; i < graph->vertices(); i++)
+    for(int j = i; j < graph->vertices(); j++)
+      if(edgeExists(i, j))
+        E++;
+
+  return E;
 }
 
-int DirectedGraph::vertices(){
+int UndirectedGraph::vertices(){
 
   return graph->vertices();
 }
 
-void DirectedGraph::add(int i, int j, int w){
+void UndirectedGraph::add(int i, int j, int w){
 
-  graph->add(i, j, w);
+  if(!edgeExists(i, j)){
+    graph->add(i, j, w);
+
+    if(i != j)
+      graph->add(j, i, w);
+  }
 }
 
-void DirectedGraph::remove(int i, int j){
+void UndirectedGraph::remove(int i, int j){
 
   graph->remove(i, j);
+  graph->remove(j, i);
 }
 
-void DirectedGraph::dfs(void (*work)(int&)){
+void UndirectedGraph::dfs(void (*work)(int&)){
 
   Color color[graph->vertices()];
 
@@ -156,82 +149,103 @@ void DirectedGraph::dfs(void (*work)(int&)){
   LinearList<LinearList<edge> > adjNodes = graph->getAdjacent();
 
   bool allVisited = false;
+
   while(!allVisited){
+    
     while(!dfsStack.empty()){
+       
        i = dfsStack.top();
 
       if(adjNodes[i].size() > 0){
+        
         j = adjNodes[i][0].dest;
         adjNodes[i].erase_pos(0);
+        
         if(color[j] == WHITE){
           dfsStack.push(j);
           color[j] = GRAY;
           (*work)(j);
         }
-      }
-      else{
+      
+      }else{
+       
         color[i] = BLACK;
         dfsStack.pop();
+      
       }
+    
     }
 
     allVisited = true;
     for(j = 0; j < graph->vertices(); j++)
-      if(color[j] == WHITE){
-        allVisited = false;
-        dfsStack.push(j);
-        (*work)(j);
-        color[j] = GRAY;
-        break;
-      }
-  }
-}
-
-void DirectedGraph::bfs(void (*work)(int&)){
-  
-  Color color[graph->vertices()];
-
-  for(int i = 0; i < graph->vertices(); i++)
-    color[i] = WHITE;
-
-  queue<int> bfsQueue;
-
-  int i = 0, j;
-  LinearList<LinearList<edge> > adjNodes = graph->getAdjacent();
-
-  bool allVisited = false;
-  while(!allVisited){
-    while(!bfsQueue.empty()){
-       i = bfsQueue.front();
-
-      if(adjNodes[i].size() > 0){
-        j = adjNodes[i][0].dest;
-        adjNodes[i].erase_pos(0);
+    
         if(color[j] == WHITE){
-          bfsQueue.push(j);
-          color[j] = GRAY;
-          (*work)(j);
+            allVisited = false;
+            dfsStack.push(j);
+            (*work)(j);
+            color[j] = GRAY;
+            break;
         }
-      }
-      else{
-        color[i] = BLACK;
-        bfsQueue.pop();
-      }
     }
+}
+
+void UndirectedGraph::bfs(void (*work)(int&)){
+  
+    Color color[graph->vertices()];
+
+    for(int i = 0; i < graph->vertices(); i++)
+        color[i] = WHITE;
+
+    queue<int> queue;
+
+    int i = 0, j;
+    LinearList<LinearList<edge> > adjNodes = graph->getAdjacent();
+
+    bool allVisited = false;
+    while(!allVisited){
+        while(!queue.empty()){
+            i = queue.front();
+
+            if(adjNodes[i].size() > 0){
+
+                j = adjNodes[i][0].dest;
+                adjNodes[i].erase_pos(0);
+        
+                if(color[j] == WHITE){
+        
+                    queue.push(j);
+                    color[j] = GRAY;
+                    (*work)(j);
+                }
+
+            }else{
+       
+                color[i] = BLACK;
+                queue.pop();
+      
+            }
+    
+        }
 
     allVisited = true;
+    
     for(j = 0; j < graph->vertices(); j++)
+    
       if(color[j] == WHITE){
+    
         allVisited = false;
-        bfsQueue.push(j);
+        queue.push(j);
         (*work)(j);
         color[j] = GRAY;
         break;
+    
       }
   }
+
 }
 
-/*void UndirectedGraph::kruskal(void (*work)(int&, int&, int&)){
+
+void UndirectedGraph::kruskal(void (*work)(int&, int&, int&)){
 
     LinearList<LinearList<edge> > edges = graph->getAdjacent();  
     LinearList<edge> allEdges(graph->edges());
@@ -253,7 +267,7 @@ void DirectedGraph::bfs(void (*work)(int&)){
     while(sets.num_disjoint_sets() != 1){
   
         if(allEdges.size() == 0)
-            throw "Graph is not complete";
+             cout<<"Graph is not complete";
     
         u = allEdges[0].src;
         v = allEdges[0].dest;
@@ -298,8 +312,6 @@ void UndirectedGraph::primMST(){
         vertexHeap u = heap.extract_min();
         visited[u.v] = 1;
 
-        std::cout<<u.v<<std::endl;
-
         for(int i=0 ; i< edges[u.v].size() ; i++){
 
             edge v = edges[u.v][i];
@@ -318,11 +330,14 @@ void UndirectedGraph::primMST(){
         }
     }
 
-    cout<<"The MST formed is :: "<<endl;
-    for(int i=0 ; i< no_of_vertices ; i++){
-        cout<<parent[i]<<" ";
+    cout<<"The edges included in MST are :: "<<endl;
+    for(int i=0 ; i<no_of_vertices ; i++){
+      if(parent[i] != -1){
+        cout<<parent[i]<<"->"<<i<<endl;
+      }
     }
     cout<<endl;
-}*/
+}
 
-#endif /* ifndef DIRECTED_GRAPH */
+
+#endif /* ifndef UNDIRECTED_GRAPH */

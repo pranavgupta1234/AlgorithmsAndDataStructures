@@ -16,18 +16,18 @@ int main(int argc,char* argv[]){
 	cout<<"Enter the number of stations and patrol routes"<<endl;
 	cin>>stations>>patrol;
 
-	AdjacencyList kingdom(stations);
+	AdjacencyList mahishmati(stations);
 
 	for(int i=0 ; i<patrol ; i++){
 
 		cin>>src>>dest>>cost;
-		kingdom.add(src,dest,cost);
+		mahishmati.add(src,dest,cost);
 
 	}
 
 	cin>>ques;
 	ans = 0;
-    int* mst = minSpanningTree(&kingdom);
+    int* mst = minSpanningTree(&mahishmati);
 
 	for(int i=0 ; i<ques ; i++){
 

@@ -8,8 +8,8 @@ using namespace std;
 class AdjacencyList : public GraphAdjacencyBase {
 
 private:
-	LinearList<list<edge> > adjList;
-	int nVertices;
+	LinearList<list<edge> > graphList;
+	int V;
 
 public:
 
@@ -55,52 +55,52 @@ public:
 
 AdjacencyList::AdjacencyList(int v){
 
-	nVertices = v;
-	adjList.resize(v);
+	V = v;
+	graphList.resize(v);
 }
 
 bool AdjacencyList::edgeExists(int i, int j){
 
-	node<edge>* iterator = adjList[i].getIterator();
+	node<edge>* it = graphList[i].getIterator();
 
-	while(iterator){
-		if(iterator->data == edge(i, j, 0))
+	while(it){
+		if(it->data == edge(i, j, 0))
 			return true;
-		iterator = iterator->next;
+		it = it->next;
 	}
 
 	return false;
 }
 	
 int AdjacencyList::vertices(){
-	return nVertices;
+	return V;
 }
 	
 int AdjacencyList::edges(){
-	int nEdges = 0;
+	int E = 0;
 
-	for(int i = 0; i < nVertices; i++)
-		nEdges += adjList[i].length();
+	for(int i = 0; i < V; i++)
+		E += graphList[i].length();
 
-	return nEdges;
+	return E;
 }
 	
 void AdjacencyList::add(int i, int j, int w){
 
 	if(!edgeExists(i, j))
-		adjList[i].append(edge(i, j, w));
+		graphList[i].append(edge(i, j, w));
 }
 
 void AdjacencyList::remove(int i, int j){
 
-	adjList[i].remove(edge(i, j, 0));
+	graphList[i].remove(edge(i, j, 0));
 }
 
 int AdjacencyList::degree(int i){
 
-	int nDegree = adjList[i].length();
+	int nDegree = graphList[i].length();
 
-	for(int j = 0; j < nVertices; j++)
+	for(int j = 0; j < V; j++)
 		if(j != i && edgeExists(j, i))
 			nDegree++;
 
@@ -109,15 +109,15 @@ int AdjacencyList::degree(int i){
 
 LinearList<LinearList<edge> > AdjacencyList::getAdjacent(){
 
-	LinearList<LinearList<edge> > adjNodes(nVertices);
+	LinearList<LinearList<edge> > adjNodes(V);
 
-	for(int i = 0; i < nVertices; i++){
-		node<edge>* iterator = adjList[i].getIterator();
+	for(int i = 0; i < V; i++){
+		node<edge>* it = graphList[i].getIterator();
 
-		while(iterator){
+		while(it){
 
-			adjNodes[i].push_back(iterator->data);
-			iterator = iterator->next;
+			adjNodes[i].push_back(it->data);
+			it = it->next;
 		}
 	}
 
