@@ -5,7 +5,7 @@ class AVL;
 
 class node{
 
-//as data fields of node class are private so making it AVL as friend of node we can allow to access all fields of node  	
+//as data fields of node class are private so making node as friend of AVL we can allow to access all fields of node  	
 friend AVL;
 
 private:
