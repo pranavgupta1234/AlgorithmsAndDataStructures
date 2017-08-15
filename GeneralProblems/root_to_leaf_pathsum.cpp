@@ -22,7 +22,9 @@ node* newNode(int data){
 bool hasPathSum(node* root,int sum){
 
 	if(root == NULL){
+
 		return (sum == 0);
+	
 	}else{
 
 		bool ans = false;
