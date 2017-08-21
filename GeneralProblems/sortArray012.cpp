@@ -3,6 +3,10 @@
 
 using namespace std;
 
+//this is a general 3 way partitioning problem 
+//it is in place and requires constant extra space
+
+
 void swap(int* a,int* b){
 	int temp = *a;
 	*a = *b;
@@ -19,15 +23,16 @@ void sortit(vector<int>& arr){
 
 		switch(arr[mid]){
 
-			case 0 : 
+			case 7 : 
 
 				swap(&arr[low++],&arr[mid++]);
 				break;
-			case 1 :
+			case 14 :
 				mid++;
 				break;
-			case 2:
+			case 54:
 				swap(&arr[mid],&arr[high--]);
+				break;
 		}
 	}
 
@@ -36,7 +41,7 @@ void sortit(vector<int>& arr){
 
 int main(){
 	
-	vector<int> arr = { 0 , 2 , 0 , 1 , 1 , 2 , 0 , 1 , 2 , 0};
+	vector<int> arr = { 7 , 14 , 54 , 54 , 14 , 54 , 7 , 7 , 54 , 14};
 
 	sortit(arr);
 
