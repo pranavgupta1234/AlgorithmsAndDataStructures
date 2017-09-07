@@ -31,13 +31,13 @@ bool isSubsetSum(vector<int> &set, int n,int sum){
     		subset[i][j] = subset[i][j]||subset[i-set[j-1]][j-1];
     	}
     }
-    /*
+    
     for(int i=0;i<=sum;i++){
     	for(int j=0;j<=n;j++){
     		cout<<subset[i][j]<<" ";
     	}
     	cout<<endl;
     }
-    */
+    
     return subset[sum][n];
 }

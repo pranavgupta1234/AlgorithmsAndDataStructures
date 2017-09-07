@@ -28,19 +28,38 @@ void printSubset(vector<int>& set,int sum){
 
 	cout<<(DPmat[setsize][sum] ? "YES" : "NO")<<endl;
 
-	// for(int i=0 ; i<=setsize ; i++){
-	// 	for(int j=0 ; j<=sum ; j++){
-	// 		cout<<DPmat[i][j]<<" ";
-	// 	}
-	// 	cout<<endl;
-	// }
+/*	for(int i=0 ; i<=setsize ; i++){
+		for(int j=0 ; j<=sum ; j++){
+			cout<<DPmat[i][j]<<" ";
+		}
+		cout<<endl;
+	}*/
 
+	int i = setsize;
+	int j = sum;
+
+	int temp = 0;
+
+	while(i>=0 and j>=0){
+		if(temp == sum){
+			break;
+		}
+		if(DPmat[i-1][j] == 0 and DPmat[i-1][j-set[i-1]] == 1){
+			cout<<set[i-1]<<" ";
+			j = j - set[i-1];
+			temp +=set[i-1];
+		}
+		
+		i--;
+	} 
+
+	cout<<endl;
 }
 
 int main(){
 	
 	vector<int> set = {2 , 3, 7 , 8 , 10};
-	int sum = 11;
+	int sum = 15;
 	printSubset(set,sum);
 	return 0;
 }

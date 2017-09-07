@@ -12,11 +12,12 @@ int maxVal(vector<int> &price,int size){
 	for(int i=0;i<=size;i++){
 		cutRod[0][i]=0;
 	}
+
 	for(int i=0;i<=size;i++){
 		cutRod[i][0]=0;
 	}
 	
-	for(int i=1;i<=size;i++){
+	for(int i=1 ; i <= size ; i++){
 		for(int j=1;j<=size;j++){
 			if(i>=j){
                 cutRod[i][j]=max(cutRod[i][j-1],cutRod[i-j][j]+price[j-1]);
