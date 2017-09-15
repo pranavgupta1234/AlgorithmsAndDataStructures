@@ -16,21 +16,21 @@ bool isBipartiteUtil(vector< set<int> >& G, int src, int colorArr[]){
 	queue <int> q;
 	q.push(src);
 
-   
+
 	while (!q.empty()){
-        
+
 		int u = q.front();
 		q.pop();
 
 		
 		for (set<int> :: iterator it = G[u].begin(); it != G[u].end() ; it++){
-            
+
 			if (colorArr[*it] == -1){
-                
+
 				colorArr[*it] = 1 - colorArr[u];
 				q.push(*it);
 			}
-            
+
 			else if (colorArr[*it] == colorArr[u]){
 				return false;
 			}
@@ -44,13 +44,13 @@ bool isBipartiteUtil(vector< set<int> >& G, int src, int colorArr[]){
 bool isBipartite(vector<set<int> >& G,int V){
 
 
-	int colorArr[V];
-	for (int i = 0; i < V; ++i){
+	int colorArr[V+1];
+	for (int i = 0; i <= V; ++i){
 		colorArr[i] = -1;
 	}
 
     // This code is to handle disconnected graoh
-	for (int i = 0; i < V; i++){
+	for (int i = 1; i <= V; i++){
 		if (colorArr[i] == -1){
 			if (isBipartiteUtil(G, i, colorArr) == false){
 				return false;
@@ -75,7 +75,7 @@ int main(){
 		bool ans = true;
 
 		map<pair<int,int>,int> hash;
-		vector< set<int> > graph(n,set<int>());
+		vector< set<int> > graph(n+1,set<int>());
 		map<pair<int,int>,int> :: iterator it;
 
 		for(int i=0 ; i<q ; i++){
@@ -85,6 +85,10 @@ int main(){
 			pair<int,int> p = make_pair(a,b);
 			hash[p] = c;
 
+		}
+
+		for(int i=0 ; i<= n ; i++){
+			graph[i] = set<int>();
 		}
 
 		for(it = hash.begin() ; it!= hash.end() ; it++){
@@ -118,31 +122,32 @@ int main(){
 				if(hash[p] != 0){
 
 					//add to graph
-					graph[p.first-1].insert(p.second-1);
-					graph[p.second-1].insert(p.first-1);			
+					graph[p.first].insert(p.second);
+					graph[p.second].insert(p.first);			
 
 				}else{
 					//merge nodes
 					//unite two nodes 
-					for(set<int> :: iterator it = graph[p.first-1].begin() ; it != graph[p.first-1].end() ; it++){
-						graph[p.second - 1].insert(*it);
+					for(set<int> :: iterator it = graph[p.second].begin() ; it != graph[p.second].end() ; it++){
+						graph[p.first].insert(*it);
+						graph[*it].insert(p.first);
 					}
 
-					for(set<int> :: iterator it = graph[p.second - 1].begin() ; it != graph[p.second - 1].end() ; it++){
-						graph[p.first - 1].insert(*it);
+					for(set<int> :: iterator itr = graph[p.first].begin() ; itr != graph[p.first].end() ; itr++){
+						graph[p.second].insert(*itr);
+						graph[*itr].insert(p.first);
 					}
-
 				}	
 			}
 		}
 
 
-		//for(int i=0 ; i<n ; i++){
-		//	for(set<int> :: iterator it=graph[i].begin() ; it != graph[i].end() ; it++){
-		//		cout<<*it<<" ";
-		//	}
-		//	cout<<endl;
-		//}	 
+		/*for(int i=1 ; i<=n ; i++){
+			for(set<int> :: iterator it=graph[i].begin()++ ; it != graph[i].end() ; it++){
+				cout<<*it<<" ";
+			}
+			cout<<endl;
+		}*/	 
 
 		if(!isBipartite(graph,n)){
 			ans = false;

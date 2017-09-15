@@ -5,7 +5,7 @@ using namespace std;
 
 void sortedInsert(stack<int>& stk,int val){
 
-	if(stk.empty() or stk.top() < val){
+	if(stk.empty() or stk.top() < val){		
 		stk.push(val);
 	}else{	
 		int temp = stk.top();
@@ -18,13 +18,11 @@ void sortedInsert(stack<int>& stk,int val){
 void funcCall(stack<int>& stk){
 
 	if(!stk.empty()){
-
 		int temp = stk.top();
 		stk.pop();
 		funcCall(stk);
 		sortedInsert(stk,temp);
 	}
-
 }
 
 int main(){

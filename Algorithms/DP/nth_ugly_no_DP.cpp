@@ -1,10 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
 int getNthUglyNo(int);
+
 int main(){
     cout<<getNthUglyNo(150)<<endl;
 	return 0;
 }
+
 int getNthUglyNo(int n){
 	int ugly[n];
     int i2 = 0;
@@ -18,8 +20,10 @@ int getNthUglyNo(int n){
     ugly[0] = 1;
 
     for(int i=1;i<n;i++){
+
         next_ugly_number = min(nextMultipleOf2,min(nextMultipleOf3,nextMultipleOf5));
         ugly[i]=next_ugly_number;
+        
         if(next_ugly_number == nextMultipleOf2){
         	i2+=1;
         	nextMultipleOf2 = ugly[i2]*2;
@@ -33,6 +37,7 @@ int getNthUglyNo(int n){
         	nextMultipleOf5 = ugly[i5]*5;
         }
         //cout<<next_ugly_number<<endl;
+
     }
     return next_ugly_number;
 }

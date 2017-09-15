@@ -6,23 +6,19 @@
 
 using namespace std;
 
-void execCommand(vector<long long int>& arr,long long int start,long long int end){
+void execCommand(vector<long long int>& arr,long long int start,long long int end,vector<long long int>& res){
 	for(long long int i=start ; i<=end ; i++){
-		if((arr[i]+1) > mod){
-			arr[i] = (arr[i]+1)%mod;			
-		}else{
-			arr[i] = arr[i]+1;	
-		}
+		arr[i] = (arr[i]+1)%mod;
+		res[i] += arr[i];
 	}	
 }
 
-void addArray(vector<long long int>& arr1,vector<long long int>& arr2){
+void addArray(vector<long long int>& arr1,vector<long long int>& arr2,vector<long long int>& res){
 	for(long long int i=0 ; i<arr1.size() ; i++){
-		if((arr1[i] + arr2[i]) > mod){
-			arr1[i] = (arr1[i] + arr2[i])%mod;			
-		}else{
-			arr1[i] = arr1[i] + arr2[i];
-		}
+		if(arr2[i] != 0){
+			arr1[i] = (arr1[i] + arr2[i])%mod;
+			res[i] += arr1[i];
+		}			
 	}
 }
 
@@ -41,13 +37,13 @@ int main(){
 			int a,b,c;
 			cin>>a>>b>>c;
 			if(a == 1){
-				execCommand(command_individual_effect[i],b,c);
+				execCommand(command_individual_effect[i],b,c,resultant_array);
 			}else{
 				for(int j=b ; j<=c ; j++){
-					addArray(command_individual_effect[i],command_individual_effect[j]);					
+					addArray(command_individual_effect[i],command_individual_effect[j],resultant_array);					
 				}
+				//addArray(resultant_array,command_individual_effect[i]);
 			}
-			addArray(resultant_array,command_individual_effect[i]);
 		}
 
 		for(int i=1 ; i<=n ; i++){
