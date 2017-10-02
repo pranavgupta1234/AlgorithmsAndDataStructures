@@ -60,6 +60,8 @@ node* findIntersectionEff1(node* l1,node* l2){
 			return b;
 		}
 	}
+
+	return NULL;
 }
 
 int findLength(node* head){
@@ -80,10 +82,11 @@ int findLength(node* head){
 }
 
 //count difference of size of two linked list and then traverse till the difference and then traverse parallel
-// O(m+n) approach
+// O(m+n) approachs
 node* findIntersectionEff2(node* l1,node* l2){
 
 	int larger = 0,diff,i=0;
+	
 	int len1 = findLength(l1);
 	int len2 = findLength(l2);
 
