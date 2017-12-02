@@ -22,20 +22,16 @@ node* newNode(int data){
 }
 
 bool checkEqualTree(node* root1,node* root2){
-
 	if(root1 == NULL and root2 == NULL){
 		return true;
 	}
-
 	if(root1 != NULL and root2 != NULL){
-
 		return (
 			root1 -> data == root2 -> data and
 			checkEqualTree(root1 -> left,root2 -> left) and
 			checkEqualTree(root1 -> right,root2 -> right)
 			);
 	}
-
 	return false;
 }
 

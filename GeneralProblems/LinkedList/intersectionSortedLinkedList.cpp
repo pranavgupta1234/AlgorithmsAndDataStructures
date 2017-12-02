@@ -49,15 +49,14 @@ node* intersection(node* list1,node* list2){
 	}
 
 	if(list1 -> data < list2 -> data){
-		return intersection(list1,list2 -> next);
+		return intersection(list1,list2->next);
 	}
 
 	if(list1 -> data > list2 -> data){
-		return intersection(list1 -> next,list2);
+		return intersection(list1->next,list2);
 	}
 
 	node* temp = new node();
-
 	temp -> data = list1 -> data;	
 	//cout<<temp -> data<<endl;
 	temp -> next = 	intersection(list1 -> next,list2 -> next);

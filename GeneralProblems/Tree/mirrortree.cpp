@@ -10,28 +10,22 @@ struct node{
 };
 
 node* newNode(int data){
-	
 	node* newnode = new node();
 	newnode -> data = data;
 	newnode -> left = NULL;
 	newnode -> right = NULL;
-
 	return newnode;
 }
 
 void mirrorTree(node* root){
-
 	if(root==NULL){
 		return ;
 	}
-
 	mirrorTree(root -> left);
 	mirrorTree(root -> right); 
-
 	node* temp = root -> right;
 	root -> right = root -> left;
 	root -> left = temp;
-
 }
 
 void inorder(node* root){

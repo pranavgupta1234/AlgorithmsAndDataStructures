@@ -10,40 +10,30 @@ typedef struct node{
 }node;
 
 node* newNode(int data){
-
 	node* newnode = new node();
 	newnode -> data = data;
 	newnode -> left = NULL;
 	newnode -> right = NULL;
-
 	return newnode;
 }
 
 bool hasPathSum(node* root,int sum){
-
 	if(root == NULL){
-
 		return (sum == 0);
-	
-	}else{
-
-		bool ans = false;
-
-		int subSum = sum - root -> data;
-
-		if(subSum == 0 and root -> left == NULL and root -> right == NULL){
-			return true;
-		}
-
-		if(root -> left){
-			ans = ans or hasPathSum(root-> left,subSum);
-		}
-		if(root -> right){
-			ans = ans or hasPathSum(root -> right,subSum);
-		}
-
-		return ans;
 	}
+
+	bool ans = false;
+	int subSum = sum - root -> data;
+	if(subSum == 0 and root -> left == NULL and root -> right == NULL){
+		return true;
+	}
+	if(root -> left){
+		ans = ans or hasPathSum(root-> left,subSum);
+	}
+	if(root -> right){
+		ans = ans or hasPathSum(root -> right,subSum);
+	}
+	return ans;
 }
 
 

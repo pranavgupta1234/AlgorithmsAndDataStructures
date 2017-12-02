@@ -20,11 +20,8 @@ void sortit(vector<int>& arr){
 	int high = arr.size() - 1;
 
 	while(mid <= high){
-
 		switch(arr[mid]){
-
 			case 7 : 
-
 				swap(&arr[low++],&arr[mid++]);
 				break;
 			case 14 :

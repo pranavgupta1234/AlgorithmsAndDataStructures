@@ -21,7 +21,8 @@ void levelOrderR2L(node* root,int h){
 
 	if(root == NULL){
 		return;
-	}else if(h == 1){
+	}
+	if(h == 1){
 		cout<<root -> data<<" ";
 	}else{
 		levelOrderR2L(root -> right,h-1);
@@ -30,10 +31,10 @@ void levelOrderR2L(node* root,int h){
 }
 
 void levelOrderL2R(node* root,int h){
-
 	if(root == NULL){
 		return;
-	}else if(h == 1){
+	}
+	if(h == 1){
 		cout<<root -> data<<" ";
 	}else{
 		levelOrderL2R(root -> left,h-1);
@@ -42,14 +43,11 @@ void levelOrderL2R(node* root,int h){
 }
 
 int height(node* root){
-
 	if(root == NULL){
 		return 0;
-	}else{
-		return 1 + max(height(root -> left),height(root -> right));
 	}
+	return 1 + max(height(root -> left),height(root -> right));
 }
-
 
 void iterateHeight(node* root){
 	int h = height(root);

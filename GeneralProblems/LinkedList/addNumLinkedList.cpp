@@ -86,6 +86,10 @@ node* sum(node* num1,node* num2){
 			head2  = NULL;
 		}
 
+		if(head1 == NULL  and head2 == NULL){
+			sum_list = insert(sum_list,carry);
+		}
+
 		//cout<<s1<<" "<<s2<<endl;
 	}
 

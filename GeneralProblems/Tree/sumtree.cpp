@@ -3,28 +3,20 @@
 using namespace std;
 
 struct node{
-
 	int data;	
 	node* left;
 	node* right;
-
 };
 
-
-
 node* newNode(int data){
-
 	node* newnode = new node();
 	newnode -> data = data;
 	newnode -> left = NULL;
 	newnode -> right = NULL;
-
 	return newnode;
-
 }
 
 int sumUtil(node* root){
-
 	if(root == NULL){
 		return 0;
 	}else{
@@ -32,30 +24,17 @@ int sumUtil(node* root){
 	}
 }
 
-
+//O(n2) approach
 bool isSumTree(node* root){
-
-	if(root == NULL){
+	if(root == NULL or (root -> left == NULL and root -> right == NULL)){
 		return true;
 	}else{
-		bool a,b,c;
-		if(root -> left == NULL and root -> right ==  NULL){
-			a = true;
-		}else{
-			a = root -> data == (sumUtil(root -> left) + sumUtil(root -> right));
-		}
-
-		b = isSumTree(root -> left);
-		c = isSumTree(root -> right);
-
-		return (a and b and c);
+		return (root -> data == (sumUtil(root -> left) + sumUtil(root -> right)) and isSumTree(root -> left) and isSumTree(root -> right));
 	}
 }
 
 int main(){
-	
 	node* root = NULL;
-
 	root = newNode(26);
 	root -> left = newNode(10);
 	root -> right = newNode(3);
