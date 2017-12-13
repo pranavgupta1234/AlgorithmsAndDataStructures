@@ -3,6 +3,7 @@
 #include <string>
 #include <cstring>
 #include <cmath>
+#include <climits>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ void build(int tree[],int arr[],int node, int start, int end){
 
 int query(int tree[],int node, int start, int end, int l, int r){
     if(r < start or end < l){
-        return 0;
+        return INT_MAX;
     }
     if(l <= start and end <= r){
         return tree[node];
