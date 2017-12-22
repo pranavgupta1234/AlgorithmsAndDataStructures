@@ -24,7 +24,7 @@ int query(int tree[],int node, int start, int end, int l, int r){
     if(r < start or end < l){
         return INT_MAX;
     }
-    if(l <= start and end <= r){
+    if(l <= start and r >= end){
         return tree[node];
     }
     int mid = (start + end) / 2;
