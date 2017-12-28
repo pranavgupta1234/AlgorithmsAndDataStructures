@@ -13,9 +13,9 @@ using namespace std;
 
 //O(1) update query
 void update(int idx,int val){
-	block[idx%blk_size] -= arr[idx];
+	block[idx/blk_size] -= arr[idx];
 	arr[idx] = val;
-	block[idx%blk_size] += arr[idx];
+	block[idx/blk_size] += arr[idx];
 }
 
 // l and r inclusive
@@ -27,7 +27,7 @@ int query(int l,int r){
 		i++;
 	}
 	int blocks_covered = r/blk_size;
-	for(int j = i ; j<blocks_covered ; j++){
+	for(int j = i/blk_size ; j<blocks_covered ; j++){
 		sum += block[j];
 		i += blk_size;
 	}
@@ -56,14 +56,10 @@ int main(){
 	int n = sizeof(inputarr)/sizeof(inputarr[0]);
 
 	buildarr(inputarr,n);
-	cout<<query(1,4)<<endl;
-	cout<<query(1,5)<<endl;
-	cout<<query(0,n-1)<<endl;
-	cout<<query(0,n-2)<<endl;
-	cout<<query(0,1)<<endl;
+	cout<<query(3,6)<<endl;
 	update(1,8);
-	cout<<query(0,1)<<endl;
-
+	update(5,8);
+	cout<<query(3,6)<<endl;
 
 	return 0;
 }

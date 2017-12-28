@@ -2,11 +2,16 @@
 #include <vector>
 #include <stack>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
 stack<int> stk;
-bool isCycle = false;
+bool isCycle;
+
+int comp(int a,int b){
+	return a<b;
+}
 
 void dfsUtil(vector<vector<int> >& graph,int s,bool visited[],bool recStack[],int parent){
 	visited[s] = true;
@@ -36,7 +41,7 @@ void toposort(vector<vector<int> >& graph){
 
 
 int main(){
-
+	ios_base::sync_with_stdio(false);
 	int n,m;
 	cin>>n>>m;
 	vector<vector<int> > graph(n+1,vector<int>(0));
@@ -46,10 +51,14 @@ int main(){
 		graph[s].push_back(d);
 	}
 
+	for(int i=0 ; i<graph.size() ; i++){
+		sort(graph[i].begin(),graph[i].end(),comp);
+	}
+
 	toposort(graph);
 
 	if(isCycle){
-		cout<<"Cycle found !"<<endl;
+		cout<<"Sandro fails."<<endl;
 	}else{
 		while(!stk.empty()){
 			cout<<stk.top()<<" ";
