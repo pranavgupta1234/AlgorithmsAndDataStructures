@@ -4,7 +4,6 @@
 using namespace std;
 
 int main(){
-	
 	//doing hash[k]++ will start incrementing from zero (initilization with 0)
 	map<int,int> factors;	
 	int n;
