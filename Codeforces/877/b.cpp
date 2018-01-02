@@ -9,7 +9,7 @@ bool isbeautiful(deque<char>& s){
 	for(int i=0 ; i<s.size() ; i++){
 		if(s[i] == 'a'){
 			isa = tr
-		}
+		}	
 	}
 }
 
