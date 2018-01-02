@@ -13,9 +13,14 @@ int main(){
 	int n,m;
 	cin>>n>>m;	
 	ll dist[n+1][n+1];
+	ll count[n+1][n+1];
+	vector<int> paths[n+1][n+1];  
 	vector<vector<int > > graph(n+1,vector<int>(0));
+
 	for(int i=1 ; i<=n ; i++){
 		for(int j=1 ; j<=n ; j++){
+			count[i][j] = 0;
+			paths[i][j].clear();
 			if(i==j){
 				dist[i][j] = 0;
 			}else{
@@ -34,9 +39,15 @@ int main(){
 	for(int k=1 ; k<=n ; k++){
 		for(int i=1 ; i<=n ; i++){
 			for(int j=1 ; j<=n ; j++){
-				if(dist[i][j] > dist[i][k] + dist[k][j]){
+				if(dist[i][j] == dist[i][k] + dist[k][j]){
+					paths[i][j].push_back(k);
+					count[i][j] += count[i][k] * count[k][j];
+				}else if(dist[i][j] > dist[i][k] + dist[k][j]){
 					dist[i][j] = dist[i][k] + dist[k][j];
 					//cout<<dist[i][j]<<endl;
+					paths[i][j].clear();
+					paths[i][j].push_back(k);
+					count[i][j] = count[i][k]*count[k][j];
 				}
 			}
 		}
