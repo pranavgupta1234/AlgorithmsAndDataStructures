@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "array": "cpp",
+        "slist": "cpp",
+        "initializer_list": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp",
+        "iosfwd": "cpp",
+        "utility": "cpp",
+        "ratio": "cpp",
+        "type_traits": "cpp"
+    }
+}

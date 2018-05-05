@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "ostream": "cpp",
+        "tuple": "cpp",
+        "array": "cpp",
+        "slist": "cpp",
+        "initializer_list": "cpp",
+        "utility": "cpp"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "ostream": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp",
+        "tuple": "cpp",
+        "random": "cpp",
+        "array": "cpp",
+        "slist": "cpp",
+        "initializer_list": "cpp"
+    },
+    "python.pythonPath": "/home/pranav/anaconda3/envs/kerascnn/bin/python"
+}
