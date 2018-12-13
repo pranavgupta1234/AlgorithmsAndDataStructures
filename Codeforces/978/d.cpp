@@ -65,56 +65,33 @@ int main(){
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll n;
+    ll n,cnt=0;
     cin>>n;
-    vector<ll> arr(n+1,0);
-    vector<ll> diff;
-    for(int i=1 ; i<=n ; i++) cin>>arr[i];
-    if(n<=2) cout<<0<<endl,exit(0);
-    for(int i=1 ; i<arr.size()-1 ; i++) diff.push_back(arr[i+1]-arr[i]);   
-    ll c = 0;
-    vector< pair<int,int> > poss;
-    vector< pair<int,int> > poss1;
-    poss.push_back({arr[1]+1,arr[2]+1});
-    poss.push_back({arr[1]+1,arr[2]-1});
-    poss.push_back({arr[1]+1,arr[2]});
-    poss.push_back({arr[1],arr[2]+1});
-    poss.push_back({arr[1],arr[2]-1});
-    poss.push_back({arr[1],arr[2]});
-    poss.push_back({arr[1]-1,arr[2]+1});
-    poss.push_back({arr[1]-1,arr[2]-1});
-    poss.push_back({arr[1]-1,arr[2]});
-    
-    poss1.push_back({arr[2]+1,arr[3]+1});
-    poss1.push_back({arr[2]+1,arr[3]-1});
-    poss1.push_back({arr[2]+1,arr[3]});
-    poss1.push_back({arr[2],arr[3]+1});
-    poss1.push_back({arr[2],arr[3]-1});
-    poss1.push_back({arr[2],arr[3]});
-    poss1.push_back({arr[2]-1,arr[3]+1});
-    poss1.push_back({arr[2]-1,arr[3]-1});
-    poss1.push_back({arr[2]-1,arr[3]});
-    ll fdif = LONG_LONG_MAX;
-    ll inita,initb;
-    for(int i=0 ; i<poss.size() ; i++) {
-        for(int j=1 ; j<poss1.size() ; j++){
-            if((poss[i].second-poss[i].first) == (poss1[j].second - poss1[j].first)){
-                fdif = (poss[i].second-poss[i].first);
-                inita = poss[i].first;
-                initb = poss[i].second;
-            }
+    vector<ll> a(n,0);
+    for(int i=0 ; i<n ; i++) cin>>a[i];
+    if(n <= 2) cout<<0<<endl,exit(0);
+    int d1=-2,d2=-2;
+    ll ans = INT_MAX;
+    for(int i=-1 ; i<=1 ; i++){
+        for(int j=-1 ; j<=1 ; j++){
+            cnt = abs(i) + abs(j);
+            bool f = false;
+            int a1 = a[0] + i;
+            int a2 = a[1] + j;
+            for(int k=2 ; k<n ; k++){
+                int diff = abs(a[k] - (a1 + (a2-a1)*k));
+                if(diff > 1){
+                    f = true;
+                    break;
+                }
+                else cnt += diff;
+            }        
+            if(!f) ans = min(ans,cnt);   
         }
-    }    
-    if(fdif == LONG_LONG_MAX) cout<<-1<<endl,exit(0);
-    vector<ll> corr(n+1,0);
-    corr[1] = inita;
-    for(int i=2 ; i<=n ; i++){
-        if((arr[i+1] - arr[i]) != fdif) cout<<-1<<endl,exit(0);
     }
-    for(int i=2 ; i<=n ; i++) corr[i] = corr[i-1] + fdif;
-    for(int i=1 ; i<n ; i++){
-        if(corr[i] != arr[i]) c++;
-    }
-    cout<<c<<endl;
+
+    if(ans == INT_MAX) cout<<-1<<endl;
+    else cout<<ans<<endl;
+
     return 0;
 } 
