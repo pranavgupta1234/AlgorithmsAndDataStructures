@@ -1,6 +1,6 @@
 {
     "files.associations": {
+        "iostream": "cpp",
         "ostream": "cpp"
-    },
-    "python.linting.pylintEnabled": true
+    }
 }
